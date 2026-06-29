@@ -1,0 +1,88 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: dark;
+  font-family: Arial, Helvetica, ui-sans-serif, system-ui, sans-serif;
+  background: #0A0F1F;
+  color: #f7f7fb;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  --background: 224 51% 8%;
+  --foreground: 240 20% 97%;
+  --card: 222 35% 12%;
+  --card-foreground: 240 20% 97%;
+  --primary: 258 90% 66%;
+  --primary-foreground: 0 0% 100%;
+  --muted: 240 7% 16%;
+  --muted-foreground: 240 7% 68%;
+  --border: 240 8% 20%;
+  --input: 240 8% 18%;
+  --ring: 258 90% 66%;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  min-width: 320px;
+  min-height: 100dvh;
+  margin: 0;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 50% 2%, rgba(59, 130, 246, 0.13), transparent 23rem),
+    radial-gradient(circle at 48% 18%, rgba(192, 132, 252, 0.12), transparent 24rem),
+    linear-gradient(180deg, #0A0F1F 0%, #111827 28%, #18181d 58%, #17171c 100%);
+}
+
+button, input, textarea, select { font: inherit; }
+
+::selection { background: rgba(139, 92, 246, 0.45); color: #fff; }
+
+.glass {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(145deg, rgba(255,255,255,0.095), rgba(255,255,255,0.032));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.09), 0 24px 90px rgba(3,7,18,0.35);
+  backdrop-filter: blur(22px);
+}
+
+.glow-border { position: relative; }
+.glow-border::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: inherit;
+  opacity: 0;
+  background: linear-gradient(120deg, rgba(139,92,246,0.75), rgba(59,130,246,0.65), transparent 70%);
+  transition: opacity 250ms ease;
+}
+.glow-border:hover::after { opacity: 1; }
+
+.project-masonry {
+  grid-auto-flow: dense;
+}
+
+.pixel-copy {
+  font-family: "Courier New", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.code-fade {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 18%, black 58%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 18%, black 58%, transparent 100%);
+}
+
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .glass { background: rgba(17, 24, 39, 0.92); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
