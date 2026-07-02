@@ -7,6 +7,7 @@ import { storageAsset } from '../lib/assets';
 const roleDetails = [
   'Leads client communication, project direction, and delivery.',
   'Checks quality, analyzes requirements, and helps keep delivery organized.',
+  'Full stack developer building frontend interfaces, backend logic, and database flows.',
   'Backend developer handling APIs, data, and system logic.',
   'UI/UX designer focused on user flows and product visuals.',
   'Frontend developer focused on responsive web interfaces.',
@@ -15,14 +16,34 @@ const roleDetails = [
 
 const profilePhotos: Record<string, string> = {
   'Noel Blanco': storageAsset('team/noel.png'),
-  'Khalifa Blanco': storageAsset('team/khalifa.jpg'),
+  'Khalifa Blanco': storageAsset('team/kalipa.jpg'),
+  'Noel Omar Blanco': storageAsset('team/omar.jpg'),
   'Felbert Yarte': storageAsset('team/felbert.JPG'),
-  'Jean Robert Owen Pascua': storageAsset('team/jean.jpg'),
+  'Jean Robert Owen Pascua': storageAsset('team/owen.JPG'),
   'Jay Anne Lalanan': storageAsset('team/jayanne.jpg'),
   'Ivar Hinisan': storageAsset('team/ivar.jpg'),
 };
 
 const premiumEase = [0.16, 1, 0.3, 1] as const;
+
+const timelinePath = members
+  .map((_, index) => {
+    const x = index % 2 === 0 ? 56 : 144;
+    const y = 20 + index * 130;
+
+    if (index === 0) {
+      return `M ${x} ${y}`;
+    }
+
+    const previousX = (index - 1) % 2 === 0 ? 56 : 144;
+    const previousY = 20 + (index - 1) * 130;
+    const midY = previousY + 65;
+
+    return `C ${previousX} ${midY}, ${x} ${midY}, ${x} ${y}`;
+  })
+  .join(' ');
+
+const timelineViewBoxHeight = 40 + (members.length - 1) * 130;
 
 function initials(name: string) {
   return name
@@ -96,13 +117,13 @@ export function Team() {
           </div>
 
           <div ref={flowRef} className="relative">
-            <motion.svg
-              aria-hidden="true"
-              className="pointer-events-none absolute left-0 top-12 h-[calc(100%-6rem)] w-44 overflow-visible md:w-48"
-              viewBox="0 0 192 820"
-              preserveAspectRatio="none"
-              style={{ opacity: reduce ? 1 : pathOpacity }}
-            >
+              <motion.svg
+                aria-hidden="true"
+                className="pointer-events-none absolute left-0 top-12 h-[calc(100%-6rem)] w-44 overflow-visible md:w-48"
+                viewBox={`0 0 192 ${timelineViewBoxHeight}`}
+                preserveAspectRatio="none"
+                style={{ opacity: reduce ? 1 : pathOpacity }}
+              >
               <defs>
                 <linearGradient id="team-curve" x1="0" x2="0" y1="0" y2="1">
                   <stop offset="0%" stopColor="#5EE7FF" />
@@ -118,7 +139,7 @@ export function Team() {
                 </filter>
               </defs>
               <motion.path
-                d="M 56 20 C 56 92, 144 92, 144 164 C 144 236, 48 236, 48 308 C 48 380, 144 380, 144 452 C 144 524, 48 524, 48 596 C 48 668, 144 668, 144 800"
+                d={timelinePath}
                 fill="none"
                 stroke="url(#team-curve)"
                 strokeLinecap="round"

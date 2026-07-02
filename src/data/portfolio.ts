@@ -1,7 +1,14 @@
 import { Code2, Globe2, Layers3, Rocket, ShieldCheck, Smartphone, TestTube2, Users, Wrench } from 'lucide-react';
 import { storageAsset } from '../lib/assets';
 
-export const navItems = ['Home', 'Expertise', 'Work', 'Team', 'Experience', 'Contact'];
+export const navItems = [
+  { label: 'Home', id: 'home' },
+  { label: 'Expertise', id: 'expertise' },
+  { label: 'Projects', id: 'projects' },
+  { label: 'Our Team', id: 'team' },
+  { label: 'Gallery', id: 'gallery' },
+  { label: 'Contact', id: 'contact' },
+];
 
 export const services = [
   { title: 'Software Development', icon: Globe2, description: 'Experienced in both functional and OOP: Dart, Python, Java, JavaScript, TypeScript.' },
@@ -107,6 +114,7 @@ export const projects = [
 export const members = [
   { name: 'Noel Blanco', role: 'CEO / Project Lead', skills: ['Strategy', 'Delivery', 'Client Systems'] },
   { name: 'Khalifa Blanco', role: 'QA Analyst / Project Planner', skills: ['Testing', 'Analysis', 'Planning'] },
+  { name: 'Noel Omar Blanco', role: 'Full Stack Developer', skills: ['Frontend', 'Backend', 'Databases'] },
   { name: 'Felbert Yarte', role: 'Backend Developer', skills: ['APIs', 'Databases', 'Security'] },
   { name: 'Jay Anne Lalanan', role: 'UI/UX Designer', skills: ['Product Design', 'Prototypes', 'User Flows'] },
   { name: 'Jean Robert Owen Pascua', role: 'Frontend Developer', skills: ['React', 'Tailwind', 'Responsive UI'] },

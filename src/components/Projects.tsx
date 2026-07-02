@@ -20,7 +20,7 @@ export function Projects() {
 
   return (
     <motion.section
-      id="work"
+      id="projects"
       className="relative overflow-hidden px-4 py-20 sm:py-24"
       initial={reduce ? false : { opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}

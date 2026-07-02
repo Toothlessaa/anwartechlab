@@ -3,6 +3,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
 import { FloatingInquiry } from './components/FloatingInquiry';
+import { Gallery } from './components/Gallery';
 import { Hero } from './components/Hero';
 import { Milestones } from './components/Milestones';
 import { Navbar } from './components/Navbar';
@@ -34,6 +35,7 @@ export default function App() {
         <Services />
         <Projects />
         <Team />
+        <Gallery />
         <Milestones />
         <Contact />
         </main>
