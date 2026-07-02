@@ -1,76 +1,79 @@
-import { useState } from 'react';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { AnimatePresence, motion, useInView, useReducedMotion, useSpring, useTransform } from 'framer-motion';
 import { projects } from '../data/portfolio';
-import { ProjectCard } from './ProjectCard';
+import { ProjectCard, type Project } from './ProjectCard';
+import { Button } from './ui/button';
 
-const filters = ['All', 'Web Development', 'Mobile Apps', 'UI/UX'];
+const filters = ['All', 'Web', 'SaaS'];
+const premiumEase = [0.16, 1, 0.3, 1] as const;
+const stats = [
+  { value: 25, suffix: '+', label: 'Projects' },
+  { value: 12, suffix: '', label: 'Clients' },
+  { value: 98, suffix: '%', label: 'Satisfaction' },
+  { value: 4, suffix: '+', label: 'Years' },
+];
 
 export function Projects() {
   const [filter, setFilter] = useState('All');
   const reduce = useReducedMotion();
-  const visible = filter === 'All' ? projects : projects.filter((project) => project.filter === filter || project.category.includes(filter));
+  const filteredProjects = useMemo(() => filter === 'All' ? projects : projects.filter((project) => project.filter === filter || project.category.includes(filter) || project.tech.includes(filter)), [filter]);
 
   return (
     <motion.section
       id="work"
-      className="relative overflow-hidden px-4 py-24 sm:py-28"
-      initial={reduce ? false : { opacity: 0, y: 80, scale: 0.95, filter: 'blur(12px)' }}
-      whileInView={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
-      viewport={{ once: true, amount: 0.12 }}
-      transition={{ duration: 1.08, ease: [0.16, 1, 0.3, 1] }}
+      className="relative overflow-hidden px-4 py-20 sm:py-24"
+      initial={reduce ? false : { opacity: 0, y: 28 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.58, ease: premiumEase }}
     >
-      <motion.div
-        aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 top-20 h-72 w-72 -translate-x-1/2 rounded-full bg-[#8B5CF6]/10 blur-3xl"
-        animate={reduce ? undefined : { x: [-18, 20, -18], y: [0, 18, 0] }}
-        transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-      />
-      <div className="mx-auto max-w-5xl">
-        <div className="mb-16 max-w-xl">
-          <motion.h2 className="text-6xl font-black leading-[0.95] tracking-[-0.07em] text-white sm:text-7xl" initial={reduce ? false : 'hidden'} whileInView="show" viewport={{ once: true, amount: 0.6 }} variants={{ hidden: {}, show: { transition: { staggerChildren: 0.1 } } }}>
-            {['Selected', 'Projects'].map((line) => (
-              <motion.span key={line} className="block" variants={{ hidden: { opacity: 0, y: 42 }, show: { opacity: 1, y: 0, transition: { duration: 0.82, ease: [0.16, 1, 0.3, 1] } } }}>{line}</motion.span>
-            ))}
-          </motion.h2>
-          <motion.p
-            className="pixel-copy mt-9 max-w-sm text-[12px] font-bold leading-5 text-white"
-            initial={reduce ? false : { opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.8 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          >
-            A curated set of web platforms, business websites, and product interfaces built for real clients.
-          </motion.p>
+      <div className="pointer-events-none absolute left-[8%] top-20 h-64 w-64 rounded-full bg-[#3B82F6]/10 blur-3xl" />
+      <div className="pointer-events-none absolute right-[10%] bottom-16 h-64 w-64 rounded-full bg-[#7C3AED]/10 blur-3xl" />
+
+      <div className="relative mx-auto max-w-7xl">
+        <div className="mb-10 grid gap-8 lg:grid-cols-[1fr_420px] lg:items-end">
+          <div>
+            <h2 className="max-w-3xl text-5xl font-black leading-[0.95] tracking-[-0.07em] text-white sm:text-7xl">Crafted Digital Experiences</h2>
+            <p className="mt-5 max-w-xl text-sm leading-7 text-zinc-400 sm:text-base">A compact showcase of premium websites, product interfaces, and launch-ready digital systems built for real clients.</p>
+            <div className="mt-6 flex flex-wrap gap-2">
+              {filters.map((item) => (
+                <Button key={item} type="button" variant={filter === item ? 'default' : 'secondary'} size="default" onClick={() => setFilter(item)} className={filter === item ? 'bg-[#5EE7FF] text-[#09090B] shadow-[0_14px_40px_rgba(94,231,255,0.22)] hover:bg-[#75ecff]' : 'border-white/10 bg-white/5 text-zinc-300 hover:bg-white/10'}>
+                  {item}
+                </Button>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            {stats.map((stat, index) => <ProjectStat key={stat.label} {...stat} index={index} />)}
+          </div>
         </div>
-        <motion.div
-          className="mb-8 flex flex-wrap items-center gap-3"
-          initial={reduce ? false : { opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.5 }}
-          transition={{ duration: 0.82, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <span className="pixel-copy text-[11px] font-bold text-zinc-400">Filter by</span>
-          {filters.map((item) => (
-            <motion.button
-              key={item}
-              type="button"
-              onClick={() => setFilter(item)}
-              className={`relative overflow-hidden rounded-full border px-4 py-2 text-sm font-semibold transition ${filter === item ? 'border-[#8B5CF6]/50 text-white' : 'border-white/10 bg-white/5 text-zinc-400 hover:border-white/20 hover:text-white'}`}
-              whileTap={reduce ? undefined : { scale: 0.96 }}
-              whileHover={reduce ? undefined : { y: -2 }}
-              transition={{ type: 'spring', stiffness: 260, damping: 22 }}
-            >
-              {filter === item ? <motion.span layoutId="project-filter-active" className="absolute inset-0 rounded-full bg-[#8B5CF6]/24 shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_0_28px_rgba(139,92,246,0.24)]" transition={{ type: 'spring', stiffness: 300, damping: 30 }} /> : null}
-              <span className="relative">{item}</span>
-            </motion.button>
-          ))}
-        </motion.div>
-        <motion.div layout className="grid gap-5 sm:gap-7 md:grid-cols-2 lg:grid-cols-3">
+
+        <div className="grid auto-rows-fr gap-5 md:grid-cols-2 lg:grid-cols-3">
           <AnimatePresence mode="popLayout">
-            {visible.map((project, index) => <ProjectCard key={project.title} project={project} index={index} />)}
+            {filteredProjects.map((project, index) => <ProjectCard key={project.id} project={project as Project} index={index} featured={index === 0} />)}
           </AnimatePresence>
-        </motion.div>
+        </div>
       </div>
     </motion.section>
+  );
+}
+
+function ProjectStat({ value, suffix, label, index }: { value: number; suffix: string; label: string; index: number }) {
+  const reduce = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
+  const spring = useSpring(0, { stiffness: 70, damping: 18 });
+  const display = useTransform(spring, (latest) => `${Math.round(latest)}${suffix}`);
+  const inView = useInView(ref, { once: true, amount: 0.7 });
+
+  useEffect(() => {
+    if (inView || reduce) spring.set(value);
+  }, [inView, reduce, spring, value]);
+
+  return (
+    <motion.div ref={ref} className="rounded-[20px] border border-white/10 bg-white/5 p-4 shadow-[0_18px_54px_rgba(0,0,0,0.16)] backdrop-blur-md" initial={reduce ? false : { opacity: 0, y: 22 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.4 }} transition={{ duration: 0.5, delay: index * 0.06, ease: premiumEase }}>
+      <motion.p className="text-3xl font-black tracking-[-0.055em] text-white">{display}</motion.p>
+      <p className="mt-1 text-[11px] font-bold uppercase tracking-[0.12em] text-zinc-500">{label}</p>
+    </motion.div>
   );
 }

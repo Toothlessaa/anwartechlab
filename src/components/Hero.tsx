@@ -1,7 +1,8 @@
+import { useEffect, useState } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { ArrowDown } from 'lucide-react';
 import { SiNextdotjs, SiReact, SiTailwindcss, SiTypescript } from 'react-icons/si';
-import heroBg from '../assets/bg.png';
+import { storageAsset } from '../lib/assets';
 import { FloatingShapes } from './FloatingShapes';
 import LogoLoop from './LogoLoop';
 
@@ -11,6 +12,9 @@ const techLogos = [
   { node: <SiTypescript />, title: 'TypeScript', href: 'https://www.typescriptlang.org' },
   { node: <SiTailwindcss />, title: 'Tailwind CSS', href: 'https://tailwindcss.com' },
 ];
+
+const heroBg = storageAsset('site/bg.png');
+const heroTitle = 'Anwar Tech Labs';
 
 export function Hero() {
   const reduce = useReducedMotion();
@@ -25,8 +29,8 @@ export function Hero() {
       <motion.div style={{ y }} className="absolute inset-x-0 top-10 mx-auto h-[30rem] max-w-5xl rounded-full bg-[radial-gradient(circle,rgba(251,146,60,0.1),rgba(15,23,42,0.12)_34%,transparent_72%)] blur-3xl" />
       <div className="absolute inset-x-0 bottom-0 h-56 bg-gradient-to-b from-transparent via-[#17171c]/80 to-[#17171c]" />
       <motion.div initial={reduce ? false : { opacity: 0, y: 26 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }} className="relative z-10 mx-auto mt-8 flex max-w-6xl flex-col items-center text-center">
-        <h1 className="text-5xl font-black uppercase leading-[0.9] tracking-[0.08em] text-white drop-shadow-[0_16px_42px_rgba(0,0,0,0.55)] sm:text-7xl sm:tracking-[0.11em] lg:text-[6.6rem] xl:text-[7.4rem]">Anwar Tech Labs</h1>
-        <p className="pixel-copy mx-auto mt-8 max-w-2xl text-[12px] font-bold uppercase tracking-[0.18em] text-white">Software engineers, front end & app developers.</p>
+        <TypewriterTitle text={heroTitle} />
+        <p className="pixel-copy mx-auto mt-8 max-w-2xl text-[12px] font-bold uppercase tracking-[0.18em] text-white">Software engineers, frontend & app developers.</p>
         <div className="mt-12 h-20 w-full max-w-3xl opacity-75">
           <LogoLoop
             logos={techLogos}
@@ -48,5 +52,44 @@ export function Hero() {
         </motion.span>
       </motion.a>
     </section>
+  );
+}
+
+function TypewriterTitle({ text }: { text: string }) {
+  const [typed, setTyped] = useState('');
+
+  useEffect(() => {
+    let index = 0;
+    let interval: number | undefined;
+
+    setTyped('');
+
+    const timeout = window.setTimeout(() => {
+      interval = window.setInterval(() => {
+        index += 1;
+        setTyped(text.slice(0, index));
+
+        if (index >= text.length && interval) {
+          window.clearInterval(interval);
+        }
+      }, 82);
+    }, 320);
+
+    return () => {
+      window.clearTimeout(timeout);
+      if (interval) window.clearInterval(interval);
+    };
+  }, [text]);
+
+  const isTyping = typed.length < text.length;
+
+  return (
+    <h1 aria-label={text} className="grid text-5xl font-black uppercase leading-[0.9] tracking-[0.08em] text-white drop-shadow-[0_16px_42px_rgba(0,0,0,0.55)] sm:text-7xl sm:tracking-[0.11em] lg:text-[6.6rem] xl:text-[7.4rem]">
+      <span className="invisible col-start-1 row-start-1" aria-hidden="true">{text}</span>
+      <span className="col-start-1 row-start-1" aria-hidden="true">
+        {typed}
+        {isTyping ? <span className="ml-1 inline-block h-[0.78em] w-[0.08em] translate-y-[0.08em] bg-white" /> : null}
+      </span>
+    </h1>
   );
 }

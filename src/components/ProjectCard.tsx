@@ -1,97 +1,89 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
+import { Badge } from './ui/badge';
+import { Button } from './ui/button';
 
-export type Project = { title: string; category: string; description: string; tech: string[]; image: string; size: string; link?: string };
-
-const sizeClasses: Record<string, string> = {
-  featured: '',
-  wide: '',
-  tall: '',
-  medium: '',
+export type Project = {
+  id: string;
+  title: string;
+  category: string;
+  filter: string;
+  description: string;
+  story?: string;
+  challenge?: string;
+  solution?: string;
+  features?: string[];
+  tech: string[];
+  image: string;
+  size: string;
+  link?: string;
+  github?: string;
 };
 
 const premiumEase = [0.16, 1, 0.3, 1] as const;
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 48, scale: 0.95, filter: 'blur(8px)' },
-  show: (index: number) => ({
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    filter: 'blur(0px)',
-    transition: { duration: 0.92, delay: index * 0.12, ease: premiumEase },
-  }),
-  exit: { opacity: 0, y: 18, scale: 0.96, filter: 'blur(6px)', transition: { duration: 0.38, ease: [0.4, 0, 0.2, 1] as const } },
-};
-
-export function ProjectCard({ project, index }: { project: Project; index: number }) {
+export function ProjectCard({ project, index, featured }: { project: Project; index: number; featured: boolean }) {
   const reduce = useReducedMotion();
   const href = project.link || '#';
-  const isFeatured = project.size === 'featured';
+  const previewClass = featured ? 'aspect-[16/9]' : 'aspect-[4/3]';
 
   return (
     <motion.article
-      layout
-      custom={index}
-      variants={cardVariants}
-      initial={reduce ? false : 'hidden'}
-      whileInView="show"
-      exit={reduce ? undefined : 'exit'}
-      viewport={{ once: true, amount: 0.18 }}
-      whileHover={reduce ? undefined : { y: -8, scale: 1.025, rotateX: 1.2, rotateY: -1.2 }}
-      transition={{ type: 'spring', stiffness: 180, damping: 20 }}
-      className={`group relative flex min-h-[360px] flex-col overflow-hidden rounded-[24px] border border-white/10 bg-[#1d1d23]/95 shadow-[0_24px_70px_rgba(0,0,0,0.25)] backdrop-blur-sm [transform-style:preserve-3d] hover:border-[#8B5CF6]/45 hover:shadow-[0_32px_90px_rgba(3,7,18,0.46),0_0_44px_rgba(139,92,246,0.18)] ${sizeClasses[project.size] ?? sizeClasses.medium}`}
+      initial={reduce ? false : { opacity: 0, y: 40, scale: 0.96 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={reduce ? undefined : { opacity: 0, y: 22, scale: 0.96 }}
+      transition={{ duration: 0.48, delay: index * 0.08, ease: premiumEase }}
+      whileHover={reduce ? undefined : { y: -6, scale: 1.01 }}
+      className={`group relative flex h-full transform-gpu flex-col overflow-hidden rounded-[30px] border border-white/10 bg-[linear-gradient(145deg,rgba(255,255,255,0.095),rgba(255,255,255,0.035))] shadow-[0_22px_70px_rgba(0,0,0,0.24)] backdrop-blur-md transition-colors will-change-transform hover:border-[#5EE7FF]/40 ${featured ? 'lg:col-span-2' : ''}`}
     >
-      <motion.a
-        href={href}
-        target={href === '#' ? undefined : '_blank'}
-        rel={href === '#' ? undefined : 'noreferrer'}
-        className="relative min-h-0 flex-1 overflow-hidden bg-[#111827]"
-        aria-label={`View ${project.title}`}
-        initial={reduce ? false : isFeatured ? { clipPath: 'inset(0 100% 0 0)' } : { clipPath: 'inset(16% 0 0 0)' }}
-        whileInView={{ clipPath: 'inset(0 0% 0 0)' }}
-        viewport={{ once: true, amount: 0.25 }}
-        transition={{ duration: isFeatured ? 1.05 : 0.78, delay: index * 0.08 + 0.12, ease: premiumEase }}
-      >
-        <motion.img
-          src={project.image}
-          alt={`${project.title} mockup`}
-          className="h-full w-full object-cover object-top opacity-95"
-          loading="lazy"
-          initial={reduce ? false : { scale: isFeatured ? 1.15 : 1.08 }}
-          whileInView={{ scale: 1 }}
-          whileHover={reduce ? undefined : { scale: 1.08 }}
-          viewport={{ once: true, amount: 0.25 }}
-          transition={{ duration: 1.15, ease: premiumEase }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#17171c]/62 via-[#17171c]/8 to-transparent" />
-        <motion.div className="absolute inset-0 bg-[#0A0F1F]/0 opacity-0" whileHover={reduce ? undefined : { opacity: 1, backgroundColor: 'rgba(10,15,31,0.22)' }} transition={{ duration: 0.35 }} />
-        {isFeatured ? <motion.div className="absolute left-5 top-5 rounded-full border border-white/10 bg-white/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white backdrop-blur-md" initial={reduce ? false : { opacity: 0, y: -12, rotate: -4 }} whileInView={{ opacity: 1, y: 0, rotate: 0 }} viewport={{ once: true }} transition={{ duration: 0.72, delay: 0.45, ease: premiumEase }}>Featured</motion.div> : null}
-      </motion.a>
-      <div className="relative shrink-0 bg-[#1d1d23]/98 p-5">
-        <div className="flex items-end justify-between gap-4">
-          <div>
-            <motion.h3 className="text-base font-black tracking-[-0.03em] text-white sm:text-lg" initial={reduce ? false : { opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.62, delay: index * 0.08 + 0.22, ease: premiumEase }}>{project.title}</motion.h3>
-            <motion.p className="pixel-copy mt-2 text-[10px] font-bold text-zinc-300" initial={reduce ? false : { opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.58, delay: index * 0.08 + 0.3, ease: premiumEase }}>{project.category}</motion.p>
-            <motion.p className="mt-3 hidden max-w-md text-xs leading-5 text-zinc-400 md:block" initial={reduce ? false : { opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.58, delay: index * 0.08 + 0.38, ease: premiumEase }}>{project.description}</motion.p>
+      <a href={href} target={href === '#' ? undefined : '_blank'} rel={href === '#' ? undefined : 'noreferrer'} className="block" aria-label={`View ${project.title}`}>
+        <div className={`relative m-3 overflow-hidden rounded-[23px] border border-white/10 bg-[#09090B] ${previewClass}`}>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_12%,rgba(94,231,255,0.18),transparent_32%),linear-gradient(145deg,rgba(255,255,255,0.08),rgba(255,255,255,0.015))]" />
+          <div className="absolute left-4 right-4 top-4 flex items-center justify-between gap-3">
+            <div className="flex gap-1.5">
+              <span className="h-2.5 w-2.5 rounded-full bg-[#FF6B6B]" />
+              <span className="h-2.5 w-2.5 rounded-full bg-[#FFD166]" />
+              <span className="h-2.5 w-2.5 rounded-full bg-[#5EE7FF]" />
+            </div>
+            <Badge className="border-[#5EE7FF]/25 bg-[#09090B]/60 text-[#5EE7FF]">{project.filter}</Badge>
           </div>
-          <motion.a
-            href={href}
-            target={href === '#' ? undefined : '_blank'}
-            rel={href === '#' ? undefined : 'noreferrer'}
-            className="group/button hidden shrink-0 items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-white backdrop-blur transition hover:border-[#8B5CF6]/50 hover:bg-[#8B5CF6]/18 sm:inline-flex"
-            initial={reduce ? false : { opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            whileHover={reduce ? undefined : { scale: 1.04 }}
-            whileTap={reduce ? undefined : { scale: 0.98 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.58, delay: index * 0.08 + 0.46, ease: premiumEase }}
+          <motion.div
+            className="absolute inset-x-3 bottom-0 top-12 overflow-hidden rounded-t-[18px] border border-white/10 bg-[#11131a] shadow-[0_18px_55px_rgba(0,0,0,0.36)]"
+            whileHover={reduce ? undefined : { y: -4 }}
+            transition={{ duration: 0.35, ease: premiumEase }}
           >
-            View Project
-            <motion.span className="inline-flex" initial={false} whileHover={reduce ? undefined : { x: 6, y: -2 }} transition={{ type: 'spring', stiffness: 340, damping: 18 }}>
-              <ArrowUpRight className="h-4 w-4" />
-            </motion.span>
-          </motion.a>
+            <motion.img
+              src={project.image}
+              alt={`${project.title} preview`}
+              width={1280}
+              height={800}
+              loading={index < 2 ? 'eager' : 'lazy'}
+              decoding="async"
+              fetchPriority={index === 0 ? 'high' : 'auto'}
+              className="h-full w-full transform-gpu object-contain object-top opacity-95 will-change-transform"
+              whileHover={reduce ? undefined : { scale: 1.025 }}
+              transition={{ duration: 0.35, ease: premiumEase }}
+            />
+          </motion.div>
+          <div className="absolute inset-0 bg-gradient-to-t from-[#09090B]/40 via-transparent to-transparent" />
+        </div>
+      </a>
+
+      <div className="flex min-h-0 flex-1 flex-col px-5 pb-5 pt-1 sm:px-6 sm:pb-6">
+        <div className="mb-3 flex flex-wrap gap-2">
+          {project.tech.slice(0, 3).map((tech) => <Badge key={tech}>{tech}</Badge>)}
+        </div>
+        <div className="flex flex-1 flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h3 className="text-2xl font-black leading-tight tracking-[-0.045em] text-white">{project.title}</h3>
+            <p className="mt-3 line-clamp-2 text-sm leading-6 text-zinc-400">{project.story || project.description}</p>
+          </div>
+          <Button asChild variant="secondary" size="default" className="group/button w-full shrink-0 justify-between border-white/10 bg-white/6 px-4 hover:border-[#5EE7FF]/35 hover:bg-[#5EE7FF]/12 sm:w-auto">
+            <a href={href} target={href === '#' ? undefined : '_blank'} rel={href === '#' ? undefined : 'noreferrer'}>
+              View
+              <ArrowUpRight className="h-4 w-4 transition-transform group-hover/button:translate-x-1 group-hover/button:-translate-y-0.5" />
+            </a>
+          </Button>
         </div>
       </div>
     </motion.article>

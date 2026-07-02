@@ -25,6 +25,11 @@
 
 html { scroll-behavior: smooth; }
 
+html {
+  scrollbar-color: rgba(94, 231, 255, 0.42) #09090b;
+  scrollbar-width: thin;
+}
+
 body {
   min-width: 320px;
   min-height: 100dvh;
@@ -34,6 +39,29 @@ body {
     radial-gradient(circle at 50% 2%, rgba(59, 130, 246, 0.13), transparent 23rem),
     radial-gradient(circle at 48% 18%, rgba(192, 132, 252, 0.12), transparent 24rem),
     linear-gradient(180deg, #0A0F1F 0%, #111827 28%, #18181d 58%, #17171c 100%);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #09090b;
+}
+
+::-webkit-scrollbar-thumb {
+  border: 2px solid #09090b;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(94, 231, 255, 0.7), rgba(124, 58, 237, 0.72));
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(94, 231, 255, 0.95), rgba(124, 58, 237, 0.9));
+}
+
+::-webkit-scrollbar-corner {
+  background: #09090b;
 }
 
 button, input, textarea, select { font: inherit; }

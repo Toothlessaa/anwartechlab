@@ -1,7 +1,14 @@
-import { ArrowUp, Code2, Mail, MessageCircle, Network, Quote, Share2 } from 'lucide-react';
+import { Code2, Mail, MessageCircle, Network, Quote, Share2 } from 'lucide-react';
 import { contactLinks } from '../data/portfolio';
 
 const icons = [Mail, MessageCircle, Share2, Code2, Network];
+const contactUrls: Record<string, string> = {
+  Email: 'mailto:hello@anwartechlab.com',
+  Messenger: 'https://www.facebook.com/profile.php?id=61591170526288',
+  Facebook: 'https://www.facebook.com/profile.php?id=61591170526288',
+  GitHub: '#',
+  LinkedIn: '#',
+};
 
 export function Contact() {
   return (
@@ -10,11 +17,12 @@ export function Contact() {
         <div className="py-20 pr-8">
           <h2 className="max-w-sm text-3xl font-black leading-tight tracking-[-0.04em] text-white">Available for select freelance opportunities</h2>
           <p className="pixel-copy mt-9 max-w-sm text-[12px] font-bold leading-5 text-white">Have an exciting project you need help with? Send us an email or contact the team via instant message.</p>
-          <a href="mailto:hello@anwartechlabs.dev" className="pixel-copy mt-20 inline-block text-[13px] font-bold text-white underline decoration-[#C084FC] decoration-2 underline-offset-4">hello@anwartechlabs.dev</a>
+          <a href="mailto:hello@anwartechlab.com" className="pixel-copy mt-20 inline-block text-[13px] font-bold text-white underline decoration-[#C084FC] decoration-2 underline-offset-4">hello@anwartechlab.com</a>
           <div className="mt-6 grid gap-2">
             {contactLinks.map((link, index) => {
               const Icon = icons[index];
-              return <a key={link} href="#" className="pixel-copy flex items-center gap-3 text-[12px] font-bold text-white transition hover:text-[#C084FC]"><Icon className="h-3.5 w-3.5 text-[#C084FC]" />{link}</a>;
+              const href = contactUrls[link] || '#';
+              return <a key={link} href={href} target={href.startsWith('http') ? '_blank' : undefined} rel={href.startsWith('http') ? 'noreferrer' : undefined} className="pixel-copy flex items-center gap-3 text-[12px] font-bold text-white transition hover:text-[#C084FC]"><Icon className="h-3.5 w-3.5 text-[#C084FC]" />{link}</a>;
             })}
           </div>
         </div>
@@ -29,7 +37,6 @@ export function Contact() {
               </div>
             </article>
           ))}
-          <a href="#home" className="absolute bottom-8 right-8 hidden h-10 w-10 place-items-center bg-white text-[#8B5CF6] lg:grid" aria-label="Back to top"><ArrowUp className="h-5 w-5" /></a>
         </div>
       </div>
     </section>

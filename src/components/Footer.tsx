@@ -1,5 +1,4 @@
-import { ArrowUp, Code2, Network, Share2 } from 'lucide-react';
-import { Button } from './ui/button';
+import { Code2, Network, Share2 } from 'lucide-react';
 
 export function Footer() {
   return (
@@ -11,8 +10,9 @@ export function Footer() {
           <p className="mt-4 text-xs text-zinc-600">© {new Date().getFullYear()} Anwar Tech Labs. All rights reserved.</p>
         </div>
         <div className="flex items-center gap-3">
-          {[Share2, Code2, Network].map((Icon, index) => <a key={index} href="#contact" aria-label="Social link" className="grid h-11 w-11 place-items-center rounded-full border border-white/10 text-zinc-400 transition hover:text-white"><Icon className="h-5 w-5" /></a>)}
-          <Button asChild variant="secondary" size="icon"><a href="#home" aria-label="Back to top"><ArrowUp className="h-5 w-5" /></a></Button>
+          <a href="https://www.facebook.com/profile.php?id=61591170526288" target="_blank" rel="noreferrer" aria-label="Facebook" className="grid h-11 w-11 place-items-center rounded-full border border-white/10 text-zinc-400 transition hover:text-white"><Share2 className="h-5 w-5" /></a>
+          <a href="mailto:hello@anwartechlab.com" aria-label="Email" className="grid h-11 w-11 place-items-center rounded-full border border-white/10 text-zinc-400 transition hover:text-white"><Code2 className="h-5 w-5" /></a>
+          <a href="#contact" aria-label="Contact" className="grid h-11 w-11 place-items-center rounded-full border border-white/10 text-zinc-400 transition hover:text-white"><Network className="h-5 w-5" /></a>
         </div>
       </div>
     </footer>
