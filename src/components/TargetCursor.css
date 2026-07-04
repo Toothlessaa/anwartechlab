@@ -6,8 +6,8 @@
   height: 0;
   pointer-events: none;
   z-index: 9999;
-  mix-blend-mode: difference;
   transform: translate(-50%, -50%);
+  filter: drop-shadow(0 0 10px rgba(0, 255, 65, 0.22));
 }
 
 .target-cursor-dot {

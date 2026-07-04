@@ -107,8 +107,8 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
           animate={reduce ? undefined : { scale: [1, 1.05] }}
           transition={{ duration: 5.8, ease: 'easeOut' }}
         >
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.08)_1px,transparent_1px)] bg-[size:56px_56px] [mask-image:radial-gradient(circle_at_center,black,transparent_72%)]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_44%,rgba(59,130,246,0.18),transparent_18rem),radial-gradient(circle_at_58%_52%,rgba(124,58,237,0.16),transparent_20rem),radial-gradient(circle_at_43%_56%,rgba(6,182,212,0.11),transparent_16rem)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(0,255,65,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,65,0.08)_1px,transparent_1px)] bg-[size:56px_56px] [mask-image:radial-gradient(circle_at_center,black,transparent_72%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_44%,rgba(0,255,65,0.18),transparent_18rem),radial-gradient(circle_at_58%_52%,rgba(124,255,124,0.14),transparent_20rem),radial-gradient(circle_at_43%_56%,rgba(53,255,107,0.11),transparent_16rem)]" />
         </motion.div>
 
         <div className="pointer-events-none absolute inset-0">
@@ -129,7 +129,7 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
           {particles.map((particle) => (
             <motion.span
               key={particle.index}
-              className="absolute left-1/2 top-1/2 rounded-full bg-[#06B6D4] shadow-[0_0_16px_rgba(6,182,212,0.85)]"
+               className="absolute left-1/2 top-1/2 rounded-full bg-[#00FF41] shadow-[0_0_16px_rgba(0,255,65,0.85)]"
               style={{ width: particle.size, height: particle.size, opacity: particle.opacity }}
               initial={{ x: 0, y: 0, scale: 0 }}
               animate={reduce ? { scale: 1 } : {
@@ -150,18 +150,18 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
             transition={{ duration: 4.4, repeat: Infinity, ease: 'easeInOut' }}
           >
             <motion.div
-              className="absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#06B6D4] shadow-[0_0_45px_rgba(6,182,212,0.95)]"
+               className="absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#00FF41] shadow-[0_0_45px_rgba(0,255,65,0.95)]"
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: [0, 1.2, 0.55], opacity: [0, 1, 0] }}
               transition={{ duration: 1.1, ease: premiumEase }}
             />
 
-            <motion.svg width="172" height="172" viewBox="0 0 172 172" className="drop-shadow-[0_0_36px_rgba(59,130,246,0.35)] sm:h-56 sm:w-56">
+            <motion.svg width="172" height="172" viewBox="0 0 172 172" className="drop-shadow-[0_0_36px_rgba(0,255,65,0.35)] sm:h-56 sm:w-56">
               <defs>
                 <linearGradient id="atl-logo" x1="20" x2="152" y1="20" y2="152">
-                  <stop offset="0%" stopColor="#06B6D4" />
-                  <stop offset="46%" stopColor="#3B82F6" />
-                  <stop offset="100%" stopColor="#7C3AED" />
+                  <stop offset="0%" stopColor="#00FF41" />
+                  <stop offset="46%" stopColor="#35FF6B" />
+                  <stop offset="100%" stopColor="#7CFF7C" />
                 </linearGradient>
                 <filter id="atl-glow" x="-50%" y="-50%" width="200%" height="200%">
                   <feGaussianBlur stdDeviation="4" result="blur" />
@@ -173,7 +173,7 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
               </defs>
               <motion.path d="M86 12 L148 48 L148 124 L86 160 L24 124 L24 48 Z" fill="none" stroke="url(#atl-logo)" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" filter="url(#atl-glow)" initial={reduce ? false : { pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.24, delay: 1.12, ease: premiumEase }} />
               <motion.path d="M52 118 L86 42 L120 118" fill="none" stroke="url(#atl-logo)" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" filter="url(#atl-glow)" initial={reduce ? false : { pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.08, delay: 1.38, ease: premiumEase }} />
-              <motion.path d="M66 94 H106" fill="none" stroke="#F8FAFC" strokeWidth="6" strokeLinecap="round" initial={reduce ? false : { pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: 1 }} transition={{ duration: 0.62, delay: 2.0, ease: premiumEase }} />
+              <motion.path d="M66 94 H106" fill="none" stroke="#00FF41" strokeWidth="6" strokeLinecap="round" initial={reduce ? false : { pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: 1 }} transition={{ duration: 0.62, delay: 2.0, ease: premiumEase }} />
               <motion.circle cx="86" cy="86" r="68" fill="url(#atl-logo)" opacity="0.08" initial={{ opacity: 0 }} animate={{ opacity: [0.05, 0.14, 0.07] }} transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut', delay: 2.2 }} />
             </motion.svg>
 
@@ -189,7 +189,7 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
               Engineering Ideas Into Reality
             </motion.p>
 
-            <motion.div className="pixel-copy mt-5 h-7 text-center text-sm font-bold text-[#5EE7FF] sm:text-base" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 3.34, duration: 0.5 }}>
+            <motion.div className="pixel-copy mt-5 h-7 text-center text-sm font-bold text-[#00FF41] sm:text-base" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 3.34, duration: 0.5 }}>
               {typed || services[0].slice(0, reduce ? services[0].length : 0)}
               <motion.span animate={{ opacity: [0, 1, 0] }} transition={{ duration: 0.86, repeat: Infinity, ease: 'easeInOut' }} className="ml-1 text-white">|</motion.span>
             </motion.div>
@@ -201,7 +201,7 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
               <span>{progress}%</span>
             </div>
             <div className="h-2 overflow-hidden rounded-full bg-white/10">
-              <motion.div className="relative h-full rounded-full bg-gradient-to-r from-[#06B6D4] via-[#3B82F6] to-[#7C3AED] shadow-[0_0_22px_rgba(59,130,246,0.65)]" style={{ width: `${progress}%` }}>
+              <motion.div className="relative h-full rounded-full bg-gradient-to-r from-[#00FF41] via-[#35FF6B] to-[#7CFF7C] shadow-[0_0_22px_rgba(0,255,65,0.65)]" style={{ width: `${progress}%` }}>
                 <motion.span className="absolute inset-y-0 right-0 w-16 bg-gradient-to-r from-transparent via-white/80 to-transparent blur-[1px]" animate={reduce ? undefined : { x: [-90, 22] }} transition={{ duration: 1.1, repeat: Infinity, ease: 'easeInOut' }} />
               </motion.div>
             </div>

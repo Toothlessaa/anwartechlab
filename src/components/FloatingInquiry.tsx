@@ -17,7 +17,7 @@ export function FloatingInquiry() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={reduce ? undefined : { opacity: 0, y: 14, scale: 0.96 }}
             transition={{ duration: 0.34, ease: premiumEase }}
-            className="mb-3 w-[min(92vw,340px)] overflow-hidden rounded-[28px] border border-white/10 bg-[#17171c]/92 p-4 text-white shadow-[0_24px_90px_rgba(0,0,0,0.38),0_0_42px_rgba(94,231,255,0.12)] backdrop-blur-2xl"
+            className="mb-3 w-[min(92vw,340px)] overflow-hidden rounded-[28px] border border-white/10 bg-[#17171c]/92 p-4 text-white shadow-[0_24px_90px_rgba(0,0,0,0.38),0_0_42px_rgba(0,255,65,0.12)] backdrop-blur-2xl"
           >
             <div className="flex items-start justify-between gap-4">
               <div>
@@ -30,16 +30,16 @@ export function FloatingInquiry() {
             </div>
 
             <div className="mt-4 grid gap-2">
-              <a href="mailto:hello@anwartechlab.com?subject=Project%20Inquiry%20for%20Anwar%20Tech%20Lab" className="group flex items-center justify-between rounded-2xl border border-[#5EE7FF]/20 bg-[#5EE7FF]/10 px-4 py-3 text-sm font-bold text-white transition hover:bg-[#5EE7FF]/16">
-                <span className="inline-flex items-center gap-3"><Mail className="h-4 w-4 text-[#5EE7FF]" /> Email the team</span>
+              <a href="mailto:hello@anwartechlab.com?subject=Project%20Inquiry%20for%20Anwar%20Tech%20Lab" className="group flex items-center justify-between rounded-2xl border border-[#00FF41]/20 bg-[#00FF41]/10 px-4 py-3 text-sm font-bold text-white transition hover:bg-[#00FF41]/16">
+                <span className="inline-flex items-center gap-3"><Mail className="h-4 w-4 text-[#00FF41]" /> Email the team</span>
                 <Send className="h-4 w-4 transition group-hover:translate-x-1" />
               </a>
-              <a href="https://www.facebook.com/profile.php?id=61591170526288" target="_blank" rel="noreferrer" className="group flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-bold text-white transition hover:border-[#8B5CF6]/35 hover:bg-[#8B5CF6]/14">
-                <span className="inline-flex items-center gap-3"><MessageCircle className="h-4 w-4 text-[#C084FC]" /> Message on Facebook</span>
+              <a href="https://www.facebook.com/profile.php?id=61591170526288" target="_blank" rel="noreferrer" className="group flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-bold text-white transition hover:border-[#00FF41]/35 hover:bg-[#00FF41]/14">
+                <span className="inline-flex items-center gap-3"><MessageCircle className="h-4 w-4 text-[#00FF41]" /> Message on Facebook</span>
                 <Send className="h-4 w-4 transition group-hover:translate-x-1" />
               </a>
-              <a href="#contact" onClick={() => setOpen(false)} className="group flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-bold text-white transition hover:border-[#8B5CF6]/35 hover:bg-[#8B5CF6]/14">
-                <span className="inline-flex items-center gap-3"><MessageCircle className="h-4 w-4 text-[#C084FC]" /> View contact options</span>
+              <a href="#contact" onClick={() => setOpen(false)} className="group flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-bold text-white transition hover:border-[#00FF41]/35 hover:bg-[#00FF41]/14">
+                <span className="inline-flex items-center gap-3"><MessageCircle className="h-4 w-4 text-[#00FF41]" /> View contact options</span>
                 <Send className="h-4 w-4 transition group-hover:translate-x-1" />
               </a>
             </div>
@@ -50,7 +50,7 @@ export function FloatingInquiry() {
       <motion.button
         type="button"
         onClick={() => setOpen((value) => !value)}
-        className="group ml-auto flex items-center gap-3 rounded-full border border-[#5EE7FF]/25 bg-[#09090B]/78 px-4 py-3 text-sm font-black text-white shadow-[0_18px_60px_rgba(0,0,0,0.35),0_0_32px_rgba(94,231,255,0.16)] backdrop-blur-xl transition hover:border-[#5EE7FF]/50 hover:bg-[#111827]/90 sm:px-5"
+        className="group ml-auto flex items-center gap-3 rounded-full border border-[#00FF41]/25 bg-[#09090B]/78 px-4 py-3 text-sm font-black text-white shadow-[0_18px_60px_rgba(0,0,0,0.35),0_0_32px_rgba(0,255,65,0.16)] backdrop-blur-xl transition hover:border-[#00FF41]/50 hover:bg-[#111827]/90 sm:px-5"
         initial={reduce ? false : { opacity: 0, y: 16, scale: 0.94 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         whileHover={reduce ? undefined : { y: -3 }}
@@ -59,7 +59,7 @@ export function FloatingInquiry() {
         aria-expanded={open}
         aria-label="Open quick inquiry"
       >
-        <span className="relative grid h-9 w-9 place-items-center rounded-full bg-[#5EE7FF] text-[#09090B]">
+        <span className="relative grid h-9 w-9 place-items-center rounded-full bg-[#00FF41] text-[#09090B]">
           <MessageCircle className="h-4 w-4" />
           <span className="absolute -right-0.5 -top-0.5 h-3 w-3 rounded-full border-2 border-[#09090B] bg-[#22c55e]" />
         </span>

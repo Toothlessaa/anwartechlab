@@ -6,7 +6,7 @@ export const navItems = [
   { label: 'Expertise', id: 'expertise' },
   { label: 'Projects', id: 'projects' },
   { label: 'Our Team', id: 'team' },
-  { label: 'Gallery', id: 'gallery' },
+  { label: 'Media', id: 'gallery' },
   { label: 'Contact', id: 'contact' },
 ];
 
@@ -107,8 +107,51 @@ export const projects = [
     size: 'medium',
     link: 'https://successpartnership.netlify.app/'
   },
+  {
+    id: 'baranggay-lafortuna-e-services',
+    title: 'Baranggay Lafortuna E-Services',
+    category: 'Web Development',
+    filter: 'Web',
+    description: 'Digital barangay service portal for requests, announcements, and resident-facing e-services in one streamlined platform.',
+    story: 'A community-focused e-services platform designed to help residents access barangay information and request services through a cleaner digital experience.',
+    challenge: 'The project needed to make local government services easier to access while keeping the interface simple, trustworthy, and usable for everyday residents.',
+    solution: 'We built a responsive service portal with clear navigation, service-focused sections, and a structure that supports announcements, requests, and public information.',
+    features: ['Resident service portal', 'Barangay announcements', 'Accessible request flow'],
+    tech: ['React', 'E-Services', 'Public Portal', 'TailwindCSS'],
+    image: storageAsset('projects/laf.png'),
+    size: 'medium',
+    link: 'https://lafortuna.online/'
+  },
 
- 
+  
+];
+
+export const mediaPosts = [
+  {
+    id: 'media-gisec-global-2025',
+    title: 'CEO Attends GISEC Global 2025: Advancing Cybersecurity Excellence',
+    category: 'Event',
+    summary: 'Our CEO had the privilege of attending GISEC Global 2025, held in Dubai, United Arab Emirates, from May 6–8, 2025, one of the world\'s premier cybersecurity events and the largest cybersecurity gathering in the Middle East and Africa.',
+    content: 'The event brought together cybersecurity professionals, ethical hackers, government agencies, technology leaders, and industry experts from more than 180 countries for three power-packed days of innovation, strategic collaboration, and live cyber drills. Participants explored the latest developments in cyber defense, threat intelligence, artificial intelligence, digital resilience, and emerging security technologies.\n\nAttending GISEC Global reflects our commitment to staying at the forefront of the rapidly evolving cybersecurity landscape. The valuable insights, global connections, and cutting-edge knowledge gained during the event further strengthen our mission to deliver secure, innovative, and future-ready technology solutions for our clients.\n\nAs cyber threats continue to evolve, we remain dedicated to continuous learning, innovation, and adopting global best practices to help businesses protect their digital assets with confidence.',
+    description: 'Our CEO had the privilege of attending GISEC Global 2025, held from May 6–8, 2025, one of the world\'s premier cybersecurity events and the largest cybersecurity gathering in the Middle East and Africa.',
+    image: storageAsset('media/thumbnail.jpg'),
+    images: [
+      storageAsset('media/thumbnail.jpg'),
+      storageAsset('media/2.jpg'),
+      storageAsset('media/3.jpg'),
+      storageAsset('media/4.jpg'),
+      storageAsset('media/5.jpg'),
+      storageAsset('media/6.jpg'),
+      storageAsset('media/8.jpg'),
+      storageAsset('media/9.jpg'),
+      storageAsset('media/10.jpg'),
+      storageAsset('media/11.jpg'),
+      storageAsset('media/12.jpg'),
+      storageAsset('media/13.jpg'),
+      storageAsset('media/15.jpg'),
+    ],
+    date: '2025-05-06',
+  },
 ];
 
 export const members = [

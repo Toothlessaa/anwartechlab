@@ -46,7 +46,7 @@ export function Hero() {
           />
         </div>
       </motion.div>
-      <motion.a href="#expertise" aria-label="Scroll to expertise" initial={reduce ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }} className="absolute bottom-8 left-1/2 grid h-16 w-9 -translate-x-1/2 place-items-center rounded-full border-2 border-white/75 text-[#A855F7]">
+      <motion.a href="#expertise" aria-label="Scroll to expertise" initial={reduce ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }} className="absolute bottom-8 left-1/2 grid h-16 w-9 -translate-x-1/2 place-items-center rounded-full border-2 border-white/75 text-[#00FF41]">
         <motion.span animate={reduce ? {} : { y: [-8, 7, -8], opacity: [0.45, 1, 0.45] }} transition={{ duration: 1.25, repeat: Infinity, ease: 'easeInOut' }}>
           <ArrowDown className="h-5 w-5" />
         </motion.span>
@@ -84,11 +84,11 @@ function TypewriterTitle({ text }: { text: string }) {
   const isTyping = typed.length < text.length;
 
   return (
-    <h1 aria-label={text} className="grid text-5xl font-black uppercase leading-[0.9] tracking-[0.08em] text-white drop-shadow-[0_16px_42px_rgba(0,0,0,0.55)] sm:text-7xl sm:tracking-[0.11em] lg:text-[6.6rem] xl:text-[7.4rem]">
+    <h1 aria-label={text} className="grid bg-white bg-clip-text text-5xl font-black uppercase leading-[0.9] tracking-[0.08em] text-transparent drop-shadow-[0_16px_42px_rgba(0,0,0,0.55)] sm:text-7xl sm:tracking-[0.11em] lg:text-[6.6rem] xl:text-[7.4rem]">
       <span className="invisible col-start-1 row-start-1" aria-hidden="true">{text}</span>
       <span className="col-start-1 row-start-1" aria-hidden="true">
         {typed}
-        {isTyping ? <span className="ml-1 inline-block h-[0.78em] w-[0.08em] translate-y-[0.08em] bg-white" /> : null}
+        {isTyping ? <span className="ml-1 inline-block h-[0.78em] w-[0.08em] translate-y-[0.08em] bg-[#00FF41]" /> : null}
       </span>
     </h1>
   );

@@ -34,14 +34,14 @@ export function Milestones() {
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
               viewport={{ once: true, amount: 0.35 }}
               transition={{ duration: 0.55, delay: index * 0.07, ease: premiumEase }}
-              className="group grid gap-4 rounded-[24px] border border-white/10 bg-[#1d1d23]/88 p-5 shadow-[0_18px_54px_rgba(0,0,0,0.18)] backdrop-blur-md transition hover:border-[#5EE7FF]/35 hover:bg-[#22222a]/92 sm:grid-cols-[5rem_1fr_auto] sm:items-center"
+              className="group grid gap-4 rounded-[24px] border border-white/10 bg-[#1d1d23]/88 p-5 shadow-[0_18px_54px_rgba(0,0,0,0.18)] backdrop-blur-md transition hover:border-[#00FF41]/35 hover:bg-[#22222a]/92 sm:grid-cols-[5rem_1fr_auto] sm:items-center"
             >
-              <div className="pixel-copy text-sm font-black text-[#5EE7FF]">0{index + 1}</div>
+              <div className="pixel-copy text-sm font-black text-[#00FF41]">0{index + 1}</div>
               <div>
                 <h3 className="text-xl font-black tracking-[-0.04em] text-white sm:text-2xl">{item.title}</h3>
                 <p className="mt-2 text-sm leading-6 text-zinc-400">{item.text}</p>
               </div>
-              <div className="grid h-11 w-11 place-items-center rounded-full border border-white/10 bg-white/5 text-white transition group-hover:border-[#5EE7FF]/35 group-hover:text-[#5EE7FF]">
+              <div className="grid h-11 w-11 place-items-center rounded-full border border-white/10 bg-white/5 text-white transition group-hover:border-[#00FF41]/35 group-hover:text-[#00FF41]">
                 <ArrowUpRight className="h-5 w-5 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </div>
             </motion.div>

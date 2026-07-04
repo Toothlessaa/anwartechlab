@@ -25,23 +25,23 @@ export default function App() {
   }, [showSplash]);
 
   return (
-    <motion.div className="min-h-screen overflow-hidden" initial={reduce ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
+    <div className="min-h-screen overflow-x-hidden">
       <AnimatePresence>{showSplash ? <SplashScreen onComplete={() => setShowSplash(false)} /> : null}</AnimatePresence>
-      <TargetCursor targetSelector="a, button, .cursor-target" spinDuration={2} hideDefaultCursor parallaxOn cursorColor="#ffffff" cursorColorOnTarget="#5EE7FF" />
-      <motion.div initial={reduce ? false : { opacity: 0, clipPath: 'circle(0% at 50% 50%)' }} animate={showSplash ? { opacity: 0, clipPath: 'circle(0% at 50% 50%)' } : { opacity: 1, clipPath: 'circle(140% at 50% 50%)' }} transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}>
+      <TargetCursor targetSelector="a, button, .cursor-target" spinDuration={2} hideDefaultCursor parallaxOn cursorColor="#00FF41" cursorColorOnTarget="#7CFF7C" />
+      <motion.div initial={reduce ? false : { opacity: 0 }} animate={showSplash ? { opacity: 0 } : { opacity: 1 }} transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}>
         <Navbar />
         <main>
-        <Hero />
-        <Services />
-        <Projects />
-        <Team />
-        <Gallery />
-        <Milestones />
-        <Contact />
+          <Hero />
+          <Services />
+          <Projects />
+          <Team />
+          <Gallery />
+          <Milestones />
+          <Contact />
         </main>
         <Footer />
         {!showSplash ? <FloatingInquiry /> : null}
       </motion.div>
-    </motion.div>
+    </div>
   );
 }

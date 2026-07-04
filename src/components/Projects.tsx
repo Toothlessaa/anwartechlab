@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion, useInView, useReducedMotion, useSpring, useTransform } from 'framer-motion';
-import { projects } from '../data/portfolio';
+import { useProjects } from '../lib/data';
 import { ProjectCard, type Project } from './ProjectCard';
 import { Button } from './ui/button';
 
@@ -14,9 +14,10 @@ const stats = [
 ];
 
 export function Projects() {
+  const { projects } = useProjects();
   const [filter, setFilter] = useState('All');
   const reduce = useReducedMotion();
-  const filteredProjects = useMemo(() => filter === 'All' ? projects : projects.filter((project) => project.filter === filter || project.category.includes(filter) || project.tech.includes(filter)), [filter]);
+  const filteredProjects = useMemo(() => filter === 'All' ? projects : projects.filter((project) => project.filter === filter || project.category.includes(filter) || project.tech.includes(filter)), [filter, projects]);
 
   return (
     <motion.section
@@ -37,7 +38,7 @@ export function Projects() {
             <p className="mt-5 max-w-xl text-sm leading-7 text-zinc-400 sm:text-base">A compact showcase of premium websites, product interfaces, and launch-ready digital systems built for real clients.</p>
             <div className="mt-6 flex flex-wrap gap-2">
               {filters.map((item) => (
-                <Button key={item} type="button" variant={filter === item ? 'default' : 'secondary'} size="default" onClick={() => setFilter(item)} className={filter === item ? 'bg-[#5EE7FF] text-[#09090B] shadow-[0_14px_40px_rgba(94,231,255,0.22)] hover:bg-[#75ecff]' : 'border-white/10 bg-white/5 text-zinc-300 hover:bg-white/10'}>
+                <Button key={item} type="button" variant={filter === item ? 'default' : 'secondary'} size="default" onClick={() => setFilter(item)} className={filter === item ? 'bg-[#00FF41] text-[#09090B] shadow-[0_14px_40px_rgba(0,255,65,0.22)] hover:bg-[#66FF66]' : 'border-white/10 bg-white/5 text-zinc-300 hover:border-[#00FF41]/30 hover:bg-[#00FF41]/10 hover:text-[#00FF41]'}>
                   {item}
                 </Button>
               ))}
