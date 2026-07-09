@@ -178,7 +178,7 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
             </motion.svg>
 
             <motion.div className="mt-7 flex flex-wrap justify-center gap-[0.34em] text-center text-2xl font-black tracking-[0.24em] text-white sm:text-4xl" initial="hidden" animate="show" variants={{ hidden: {}, show: { transition: { delayChildren: 2.35, staggerChildren: 0.045 } } }}>
-              {'ANWAR TECH LAB'.split('').map((char, index) => (
+              {'ANWAR TECH LABS'.split('').map((char, index) => (
                 <motion.span key={`${char}-${index}`} className={char === ' ' ? 'w-3 sm:w-5' : ''} variants={{ hidden: { opacity: 0, y: 18, filter: 'blur(8px)' }, show: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.55, ease: premiumEase } } }}>
                   {char}
                 </motion.span>

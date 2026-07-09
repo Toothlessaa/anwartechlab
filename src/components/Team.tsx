@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { BadgeCheck } from 'lucide-react';
 import { members } from '../data/portfolio';
@@ -15,7 +15,7 @@ const roleDetails = [
 ];
 
 const profilePhotos: Record<string, string> = {
-  'Noel Blanco': storageAsset('team/noel.png'),
+  'Noel Blanco': storageAsset('team/noel.jpg'),
   'Khalifa Blanco': storageAsset('team/kalipa.jpg'),
   'Noel Omar Blanco': storageAsset('team/omar.jpg'),
   'Felbert Yarte': storageAsset('team/felbert.JPG'),
@@ -56,6 +56,20 @@ function initials(name: string) {
 }
 
 const titleWords = ['Meet', 'Our', 'Team'];
+
+function TeamPhoto({ name, src }: { name: string; src?: string }) {
+  const [failed, setFailed] = useState(false);
+
+  if (src && !failed) {
+    return <img src={src} alt={`${name} profile`} className="h-full w-full object-cover object-top" onError={() => setFailed(true)} />;
+  }
+
+  return (
+    <div className="grid h-full w-full place-items-center bg-[radial-gradient(circle_at_35%_20%,rgba(94,231,255,0.22),transparent_38%),linear-gradient(135deg,#111827,#3b1974,#17171c)] text-2xl font-black tracking-[-0.08em] text-white">
+      {initials(name)}
+    </div>
+  );
+}
 
 export function Team() {
   const reduce = useReducedMotion();
@@ -173,13 +187,7 @@ export function Team() {
                         viewport={{ once: true, amount: 0.4 }}
                         transition={{ duration: 0.7, delay: index * 0.08 + 0.1, ease: premiumEase }}
                       >
-                        {photo ? (
-                          <img src={photo} alt={`${member.name} profile`} className="h-full w-full object-cover object-top" />
-                        ) : (
-                          <div className="grid h-full w-full place-items-center bg-[radial-gradient(circle_at_35%_20%,rgba(94,231,255,0.22),transparent_38%),linear-gradient(135deg,#111827,#3b1974,#17171c)] text-2xl font-black tracking-[-0.08em] text-white">
-                            {initials(member.name)}
-                          </div>
-                        )}
+                        <TeamPhoto name={member.name} src={photo} />
                       </motion.div>
                     </div>
 

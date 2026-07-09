@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { NavLink, Navigate, Outlet, useNavigate } from 'react-router-dom';
 import { FolderKanban, Image, LayoutDashboard, LogOut, User } from 'lucide-react';
-import { supabase } from '../../lib/supabase';
-import type { Profile } from '../../types';
+import { logoutAdmin, verifyAdminSession, type AdminUser } from '../../lib/adminAuth';
 
 const navItems = [
   { to: '/admin/projects', label: 'Projects', icon: FolderKanban },
@@ -12,35 +11,26 @@ const navItems = [
 export default function AdminLayout() {
   const navigate = useNavigate();
   const [session, setSession] = useState<boolean | null>(null);
-  const [profile, setProfile] = useState<Profile | null>(null);
+  const [admin, setAdmin] = useState<AdminUser | null>(null);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session: s } }) => {
-      if (!s) {
+    let cancelled = false;
+
+    verifyAdminSession().then((currentAdmin) => {
+      if (cancelled) return;
+      if (!currentAdmin) {
         setSession(false);
         return;
       }
       setSession(true);
-      supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', s.user.id)
-        .single()
-        .then(({ data }) => {
-          if (data) setProfile(data as Profile);
-        });
+      setAdmin(currentAdmin);
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(!!session);
-      if (!session) navigate('/admin/login');
-    });
-
-    return () => subscription.unsubscribe();
-  }, [navigate]);
+    return () => { cancelled = true; };
+  }, []);
 
   async function handleLogout() {
-    await supabase.auth.signOut();
+    await logoutAdmin();
     navigate('/admin/login');
   }
 
@@ -89,12 +79,12 @@ export default function AdminLayout() {
         </nav>
 
         <div className="border-t border-white/10 pt-4">
-          {profile && (
+          {admin && (
             <div className="mb-3 flex items-center gap-2.5 rounded-xl bg-white/5 px-4 py-2.5">
               <User className="h-4 w-4 text-zinc-500" />
               <div className="min-w-0">
-                <p className="truncate text-xs font-medium text-white">{profile.email}</p>
-                <p className="text-[10px] uppercase tracking-wider text-zinc-500">{profile.role}</p>
+                <p className="truncate text-xs font-medium text-white">{admin.email}</p>
+                <p className="text-[10px] uppercase tracking-wider text-zinc-500">{admin.role}</p>
               </div>
             </div>
           )}

@@ -10,7 +10,11 @@ config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const root = path.resolve(__dirname, '..');
-const assetsDir = path.join(root, 'src', 'assets');
+const assetsDirs = [
+  path.join(root, 'src', 'assets'),
+  path.join(root, 'assets'),
+  root,
+];
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -19,15 +23,18 @@ const PREFIX = (process.env.SUPABASE_STORAGE_PREFIX || 'assets').replace(/^\/+|\
 
 const assets = [
   { file: 'bg.png', key: 'site/bg.png' },
+  { file: 'laf.png', key: 'projects/laf.png' },
   { file: 'car.png', key: 'projects/car.png' },
   { file: 'hotel.jpg', key: 'projects/hotel.jpg' },
   { file: 'venueproject.png', key: 'projects/venueproject.png' },
   { file: 'lawoffice.png', key: 'projects/lawoffice.png' },
   { file: 'success.png', key: 'projects/success.png' },
   { file: 'jayanne.jpg', key: 'team/jayanne.jpg' },
+  { file: 'owen.JPG', key: 'team/owen.JPG' },
   { file: 'jean.jpg', key: 'team/jean.jpg' },
-  { file: 'noel.png', key: 'team/noel.png' },
-  { file: 'khalifa.jpg', key: 'team/khalifa.jpg' },
+  { file: 'noel.jpg', key: 'team/noel.jpg' },
+  { file: 'omar.jpg', key: 'team/omar.jpg' },
+  { file: 'kalipa.jpg', key: 'team/kalipa.jpg' },
   { file: 'felbert.JPG', key: 'team/felbert.JPG' },
   { file: 'ivar.jpg', key: 'team/ivar.jpg' },
 ];
@@ -63,8 +70,8 @@ async function ensureBucket() {
 }
 
 async function uploadAsset(asset) {
-  const sourcePath = path.join(assetsDir, asset.file);
-  if (!existsSync(sourcePath)) {
+  const sourcePath = assetsDirs.map((dir) => path.join(dir, asset.file)).find((candidate) => existsSync(candidate));
+  if (!sourcePath) {
     console.warn(`Skipped missing asset: ${asset.file}`);
     return null;
   }

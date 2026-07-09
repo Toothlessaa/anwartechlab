@@ -18,6 +18,21 @@ export const services = [
 
 export const projects = [
   {
+    id: 'freemason',
+    title: 'Freemason',
+    category: 'Web Development',
+    filter: 'Web',
+    description: 'Masonry and construction services platform with portfolio showcase, service catalog, and client inquiry system.',
+    story: 'A professional digital presence built for Freemason to showcase masonry expertise and connect with potential clients.',
+    challenge: 'The business needed a credible online platform to present past projects, list services, and generate leads efficiently.',
+    solution: 'We developed a clean, responsive website with a project gallery, service breakdown, and streamlined contact flow.',
+    features: ['Masonry portfolio showcase', 'Service catalog', 'Client inquiry system', 'Responsive design'],
+    tech: ['React', 'Masonry & Construction', 'Responsive UI', 'TailwindCSS'],
+    image: storageAsset('projects/mason.png'),
+    size: 'hero',
+    link: 'https://www.mcml23.com/'
+  },
+  {
     id: 'auralis-dental',
     title: 'Auralis Dental',
     category: 'Web Development',
@@ -123,10 +138,25 @@ export const projects = [
     link: 'https://lafortuna.online/'
   },
 
-  
 ];
 
 export const mediaPosts = [
+  {
+    id: 'media-bear-market-patience-wins',
+    title: 'Navigating the Bear Market: Patience Wins the Long Game',
+    category: 'Update',
+    summary: 'With my good friend Bontox, a well-known forex and crypto trader now based in Japan',
+    content: 'Today, Bitcoin continues to lead the direction of the crypto market. When Bitcoin goes down, most altcoins usually follow its movement, creating fear and uncertainty among many traders. This is why patience, discipline, and proper risk management are very important.\n\nAs a crypto trader, I believe that bear markets are not only moments of fear-they are also moments of learning, preparation, and opportunity. The key is not to panic, but to understand the cycle of the market.\n\nBitcoin has gone through many ups and downs before, yet it remains the strongest symbol of the crypto industry. When Bitcoin starts to recover, many altcoins often follow the same direction. That is why traders must stay calm, continue learning, protect their capital, and wait patiently for the right opportunity.\n\nBull markets create excitement, but bear markets build strong and experienced traders. Patience today can become opportunity tomorrow.',
+    description: 'With my good friend Bontox, a well-known forex and crypto trader now based in Japan',
+    image: storageAsset('media/bitcoin/port1.jpg'),
+    images: [
+      storageAsset('media/bitcoin/port1.jpg'),
+      storageAsset('media/bitcoin/port2.jpg'),
+      storageAsset('media/bitcoin/port3.jpg'),
+      storageAsset('media/bitcoin/port4.jpg'),
+    ],
+    date: '2026-07-05',
+  },
   {
     id: 'media-gisec-global-2025',
     title: 'CEO Attends GISEC Global 2025: Advancing Cybersecurity Excellence',
@@ -148,7 +178,6 @@ export const mediaPosts = [
       storageAsset('media/11.jpg'),
       storageAsset('media/12.jpg'),
       storageAsset('media/13.jpg'),
-      storageAsset('media/15.jpg'),
     ],
     date: '2025-05-06',
   },

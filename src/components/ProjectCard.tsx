@@ -29,9 +29,9 @@ export function ProjectCard({ project, index, featured }: { project: Project; in
 
   return (
     <motion.article
-      initial={reduce ? false : { opacity: 0, y: 40, scale: 0.96 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={reduce ? undefined : { opacity: 0, y: 22, scale: 0.96 }}
+      initial={reduce ? false : { y: 40, scale: 0.96 }}
+      animate={{ y: 0, scale: 1 }}
+      exit={reduce ? undefined : { y: 22, scale: 0.96 }}
       transition={{ duration: 0.48, delay: index * 0.08, ease: premiumEase }}
       whileHover={reduce ? undefined : { y: -6, scale: 1.01 }}
       className={`group relative flex h-full transform-gpu flex-col overflow-hidden rounded-[30px] border border-white/10 bg-[linear-gradient(145deg,rgba(255,255,255,0.095),rgba(255,255,255,0.035))] shadow-[0_22px_70px_rgba(0,0,0,0.24)] backdrop-blur-md transition-colors will-change-transform hover:border-[#00FF41]/40 ${featured ? 'lg:col-span-2' : ''}`}

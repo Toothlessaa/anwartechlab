@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../../lib/supabase';
+import { loginAdmin } from '../../lib/adminAuth';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -14,8 +14,7 @@ export default function Login() {
     setError('');
     setLoading(true);
     try {
-      const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
-      if (authError) throw authError;
+      await loginAdmin(email, password);
       navigate('/admin/projects');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed');

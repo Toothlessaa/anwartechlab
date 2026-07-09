@@ -3,6 +3,7 @@ import { supabase } from './supabase';
 import { storageAsset } from './assets';
 import type { Project, GalleryItem } from '../types';
 import { mediaPosts as fallbackMediaPosts, projects as fallbackProjects } from '../data/portfolio';
+import { getAdminToken } from './adminAuth';
 
 const BUCKET = 'portfolio-assets';
 
@@ -36,14 +37,6 @@ function uniquePaths(paths: string[]): string[] {
   return Array.from(new Set(paths.filter(Boolean)));
 }
 
-function isSchemaCompatibilityError(error: unknown): boolean {
-  if (!error || typeof error !== 'object') return false;
-
-  const candidate = error as { code?: string; message?: string; details?: string; hint?: string };
-  const text = `${candidate.message || ''} ${candidate.details || ''} ${candidate.hint || ''}`.toLowerCase();
-  return candidate.code === 'PGRST204' || candidate.code === '42703' || text.includes('column') || text.includes('schema cache');
-}
-
 function mapFallbackMediaItem(item: typeof fallbackMediaPosts[number]): GalleryItem {
   return {
     ...item,
@@ -51,20 +44,17 @@ function mapFallbackMediaItem(item: typeof fallbackMediaPosts[number]): GalleryI
   };
 }
 
-function buildLegacyGalleryPayload(item: Pick<GalleryItem, 'title' | 'category' | 'summary' | 'content' | 'description' | 'image' | 'images' | 'date'>) {
-  return {
-    title: item.title,
-    category: item.category,
-    description: item.summary || item.description || item.content,
-    image: item.image || item.images[0] || '',
-    date: item.date || new Date().toISOString().split('T')[0],
-  };
+function requireAdminToken(): string {
+  const token = getAdminToken();
+  if (!token) throw new Error('Admin session expired. Please sign in again.');
+  return token;
 }
 
 export async function uploadImage(file: File, folder: string): Promise<string> {
   const ext = file.name.split('.').pop();
   const filename = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
-  const path = `assets/${folder}/${filename}`;
+  const storageFolder = folder === 'gallery' ? 'media' : folder;
+  const path = `assets/${storageFolder}/${filename}`;
 
   const { error } = await supabase.storage.from(BUCKET).upload(path, file, {
     cacheControl: '3600',
@@ -73,7 +63,7 @@ export async function uploadImage(file: File, folder: string): Promise<string> {
 
   if (error) throw error;
 
-  return `${folder}/${filename}`;
+  return `${storageFolder}/${filename}`;
 }
 
 export async function deleteImage(imagePath: string): Promise<void> {
@@ -105,10 +95,14 @@ function mapProject(row: Record<string, unknown>): Project {
 function mapGalleryItem(row: Record<string, unknown>): GalleryItem {
   const rawImages = parseImageList(row.images);
   const rawCoverImage = typeof row.image === 'string' ? row.image : '';
-  const images = uniquePaths([...rawImages, rawCoverImage].filter(Boolean)).map(normalizeStoredPath);
+  const compatibilityImages = row.id === 'media-bear-market-patience-wins' && rawImages.length === 0
+    ? ['media/bitcoin/port1.jpg', 'media/bitcoin/port2.jpg', 'media/bitcoin/port3.jpg', 'media/bitcoin/port4.jpg']
+    : [];
+  const images = uniquePaths([...rawImages, ...compatibilityImages, rawCoverImage].filter(Boolean)).map(normalizeStoredPath);
   const description = (row.description as string) || '';
-  const summary = (row.summary as string) || description;
-  const content = (row.content as string) || description;
+  const [legacySummary, ...legacyContentParts] = description.split(/\n\s*\n/);
+  const summary = (row.summary as string) || legacySummary || description;
+  const content = (row.content as string) || legacyContentParts.join('\n\n') || description;
 
   return {
     id: row.id as string,
@@ -182,7 +176,10 @@ export function useGalleryItems() {
         if (err) throw err;
 
         if (data && data.length > 0) {
-          setItems(data.map(mapGalleryItem));
+          const remoteItems = data.map(mapGalleryItem);
+          const fallbackItems = fallbackMediaPosts.map(mapFallbackMediaItem);
+          const remoteIds = new Set(remoteItems.map((item) => item.id));
+          setItems([...remoteItems, ...fallbackItems.filter((item) => !remoteIds.has(item.id))]);
         } else {
           setItems(fallbackMediaPosts.map(mapFallbackMediaItem));
         }
@@ -248,9 +245,9 @@ export async function fetchGalleryItemById(id: string): Promise<GalleryItem | nu
 
 export async function createProject(project: Omit<Project, 'id' | 'created_at'> & { id?: string }): Promise<Project> {
   const id = project.id || slugify(project.title) + '-' + Date.now().toString(36);
-  const { data, error } = await supabase
-    .from('projects')
-    .insert({
+  const { data, error } = await supabase.rpc('admin_create_project', {
+    p_token: requireAdminToken(),
+    p_project: {
       id,
       title: project.title,
       category: project.category,
@@ -265,18 +262,18 @@ export async function createProject(project: Omit<Project, 'id' | 'created_at'> 
       size: project.size || 'medium',
       link: project.link || null,
       github: project.github || null,
-    })
-    .select()
-    .single();
+    },
+  });
 
   if (error) throw error;
   return mapProject(data as Record<string, unknown>);
 }
 
 export async function updateProject(id: string, updates: Partial<Omit<Project, 'id' | 'created_at'>>): Promise<Project> {
-  const { data, error } = await supabase
-    .from('projects')
-    .update({
+  const { data, error } = await supabase.rpc('admin_update_project', {
+    p_token: requireAdminToken(),
+    p_id: id,
+    p_project: {
       title: updates.title,
       category: updates.category,
       filter: updates.filter,
@@ -290,11 +287,8 @@ export async function updateProject(id: string, updates: Partial<Omit<Project, '
       size: updates.size || 'medium',
       link: updates.link || null,
       github: updates.github || null,
-      updated_at: new Date().toISOString(),
-    })
-    .eq('id', id)
-    .select()
-    .single();
+    },
+  });
 
   if (error) throw error;
   return mapProject(data as Record<string, unknown>);
@@ -302,7 +296,10 @@ export async function updateProject(id: string, updates: Partial<Omit<Project, '
 
 export async function deleteProject(id: string, imagePath?: string): Promise<void> {
   if (imagePath) await deleteImage(imagePath);
-  const { error } = await supabase.from('projects').delete().eq('id', id);
+  const { error } = await supabase.rpc('admin_delete_project', {
+    p_token: requireAdminToken(),
+    p_id: id,
+  });
   if (error) throw error;
 }
 
@@ -321,24 +318,12 @@ export async function createGalleryItem(item: Omit<GalleryItem, 'id' | 'created_
     date: item.date || new Date().toISOString().split('T')[0],
   };
 
-  const { data, error } = await supabase
-    .from('gallery_items')
-    .insert(payload)
-    .select()
-    .single();
+  const { data, error } = await supabase.rpc('admin_create_gallery_item', {
+    p_token: requireAdminToken(),
+    p_item: payload,
+  });
 
-  if (error) {
-    if (!isSchemaCompatibilityError(error)) throw error;
-
-    const legacyResult = await supabase
-      .from('gallery_items')
-      .insert({ id, ...buildLegacyGalleryPayload({ ...item, image: item.image || images[0] || '', images }) })
-      .select()
-      .single();
-
-    if (legacyResult.error) throw legacyResult.error;
-    return mapGalleryItem(legacyResult.data as Record<string, unknown>);
-  }
+  if (error) throw error;
 
   return mapGalleryItem(data as Record<string, unknown>);
 }
@@ -357,38 +342,13 @@ export async function updateGalleryItem(id: string, updates: Partial<Omit<Galler
     updated_at: new Date().toISOString(),
   };
 
-  const { data, error } = await supabase
-    .from('gallery_items')
-    .update(payload)
-    .eq('id', id)
-    .select()
-    .single();
+  const { data, error } = await supabase.rpc('admin_update_gallery_item', {
+    p_token: requireAdminToken(),
+    p_id: id,
+    p_item: payload,
+  });
 
-  if (error) {
-    if (!isSchemaCompatibilityError(error)) throw error;
-
-    const legacyResult = await supabase
-      .from('gallery_items')
-      .update({
-        ...buildLegacyGalleryPayload({
-          title: updates.title || '',
-          category: updates.category || '',
-          summary: updates.summary || '',
-          content: updates.content || '',
-          description: updates.description || '',
-          image: updates.image || images[0] || '',
-          images,
-          date: updates.date || '',
-        }),
-        updated_at: new Date().toISOString(),
-      })
-      .eq('id', id)
-      .select()
-      .single();
-
-    if (legacyResult.error) throw legacyResult.error;
-    return mapGalleryItem(legacyResult.data as Record<string, unknown>);
-  }
+  if (error) throw error;
 
   return mapGalleryItem(data as Record<string, unknown>);
 }
@@ -397,6 +357,9 @@ export async function deleteGalleryItem(id: string, imagePaths?: string[]): Prom
   if (imagePaths?.length) {
     await Promise.all(uniquePaths(imagePaths).map((imagePath) => deleteImage(imagePath)));
   }
-  const { error } = await supabase.from('gallery_items').delete().eq('id', id);
+  const { error } = await supabase.rpc('admin_delete_gallery_item', {
+    p_token: requireAdminToken(),
+    p_id: id,
+  });
   if (error) throw error;
 }

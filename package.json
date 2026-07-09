@@ -8,7 +8,10 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "seed:storage": "node scripts/seed-supabase-storage.mjs",
-    "list:storage": "node scripts/list-supabase-storage.mjs"
+    "seed:bitcoin-post": "node scripts/seed-bitcoin-media-post.mjs",
+    "list:storage": "node scripts/list-supabase-storage.mjs",
+    "copy:team-storage": "node scripts/copy-storage-prefix.mjs team assets/team",
+    "copy:project-storage": "node scripts/copy-storage-prefix.mjs projects assets/projects"
   },
   "devDependencies": {
     "@types/react": "^19.2.17",

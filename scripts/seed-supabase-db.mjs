@@ -37,6 +37,22 @@ const supabase = createClient(supabaseUrl, serviceRoleKey);
 // =====================================================
 const projects = [
   {
+    id: 'freemason',
+    title: 'Freemason',
+    category: 'Web Development',
+    filter: 'Web',
+    description: 'Masonry and construction services platform with portfolio showcase, service catalog, and client inquiry system.',
+    story: 'A professional digital presence built for Freemason to showcase masonry expertise and connect with potential clients.',
+    challenge: 'The business needed a credible online platform to present past projects, list services, and generate leads efficiently.',
+    solution: 'We developed a clean, responsive website with a project gallery, service breakdown, and streamlined contact flow.',
+    features: ['Masonry portfolio showcase', 'Service catalog', 'Client inquiry system', 'Responsive design'],
+    tech: ['React', 'Masonry & Construction', 'Responsive UI', 'TailwindCSS'],
+    image: 'projects/mason.png',
+    size: 'hero',
+    link: 'https://www.mcml23.com/',
+    github: null,
+  },
+  {
     id: 'auralis-dental',
     title: 'Auralis Dental',
     category: 'Web Development',
@@ -95,7 +111,7 @@ const projects = [
     solution: 'We created a responsive hotel showcase with strong visuals, clear content hierarchy, and direct guest actions.',
     features: ['Hotel room showcase', 'Guest-focused content flow', 'Responsive booking-ready layout'],
     tech: ['React', 'Hotel Website', 'UI/UX', 'TailwindCSS'],
-    image: 'projects/hotel.jpg',
+    image: 'projects/hotel.png',
     size: 'medium',
     link: 'https://hotelwebbb.netlify.app/',
     github: null,
@@ -132,12 +148,41 @@ const projects = [
     link: 'https://successpartnership.netlify.app/',
     github: null,
   },
+  {
+    id: 'baranggay-lafortuna-e-services',
+    title: 'Baranggay Lafortuna E-Services',
+    category: 'Web Development',
+    filter: 'Web',
+    description: 'Barangay digital services platform for document requests, information access, and community engagement.',
+    story: 'A local government e-services portal built to modernize barangay operations and make public services accessible online.',
+    challenge: 'Residents needed a central place to request documents, access announcements, and connect with their barangay without in-person visits.',
+    solution: 'We built a full-service web portal with digital document requests, announcements, and community information hub.',
+    features: ['Digital document requests', 'Community announcements', 'Barangay information hub', 'Responsive design'],
+    tech: ['React', 'E-Services', 'Government Portal', 'TailwindCSS'],
+    image: 'projects/laf.png',
+    size: 'medium',
+    link: 'https://lafortuna.online/',
+    github: null,
+  },
 ];
 
 async function seed() {
+  console.log('Clearing existing projects...');
+  const { error: deleteError } = await supabase.from('projects').delete().neq('id', '');
+  if (deleteError) {
+    console.error('  Failed to clear projects:', deleteError.message);
+    process.exit(1);
+  }
+  console.log('  Cleared.');
+
   console.log('Seeding projects...');
-  for (const project of projects) {
-    const { error } = await supabase.from('projects').upsert(project, { onConflict: 'id' });
+  const now = new Date();
+  for (let i = 0; i < projects.length; i++) {
+    const project = {
+      ...projects[i],
+      created_at: new Date(now.getTime() - i * 60000).toISOString(),
+    };
+    const { error } = await supabase.from('projects').insert(project);
     if (error) {
       console.error(`  Failed to insert project "${project.id}":`, error.message);
     } else {

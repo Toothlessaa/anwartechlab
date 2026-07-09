@@ -23,8 +23,8 @@ export function Projects() {
     <motion.section
       id="projects"
       className="relative overflow-hidden px-4 py-20 sm:py-24"
-      initial={reduce ? false : { opacity: 0, y: 28 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={reduce ? false : { y: 28 }}
+      whileInView={{ y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.58, ease: premiumEase }}
     >
@@ -50,7 +50,7 @@ export function Projects() {
           </div>
         </div>
 
-        <div className="grid auto-rows-fr gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           <AnimatePresence mode="popLayout">
             {filteredProjects.map((project, index) => <ProjectCard key={project.id} project={project as Project} index={index} featured={index === 0} />)}
           </AnimatePresence>
@@ -72,7 +72,7 @@ function ProjectStat({ value, suffix, label, index }: { value: number; suffix: s
   }, [inView, reduce, spring, value]);
 
   return (
-    <motion.div ref={ref} className="rounded-[20px] border border-white/10 bg-white/5 p-4 shadow-[0_18px_54px_rgba(0,0,0,0.16)] backdrop-blur-md" initial={reduce ? false : { opacity: 0, y: 22 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.4 }} transition={{ duration: 0.5, delay: index * 0.06, ease: premiumEase }}>
+    <motion.div ref={ref} className="rounded-[20px] border border-white/10 bg-white/5 p-4 shadow-[0_18px_54px_rgba(0,0,0,0.16)] backdrop-blur-md" initial={reduce ? false : { y: 22 }} whileInView={{ y: 0 }} viewport={{ once: true, amount: 0.4 }} transition={{ duration: 0.5, delay: index * 0.06, ease: premiumEase }}>
       <motion.p className="text-3xl font-black tracking-[-0.055em] text-white">{display}</motion.p>
       <p className="mt-1 text-[11px] font-bold uppercase tracking-[0.12em] text-zinc-500">{label}</p>
     </motion.div>
