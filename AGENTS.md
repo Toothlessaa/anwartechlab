@@ -1,1 +1,1 @@
-# RULE 1: DO NOT ANALYZE OR READ THE .env file
+# RULE 1: DO NOT ANALYZE OR READ THE .env file you can try to see .env.example to see context

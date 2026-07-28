@@ -4,21 +4,23 @@ import { randomUUID } from 'node:crypto';
 import { rm } from 'node:fs/promises';
 import { chromium as playwright } from 'playwright-core';
 
+export const config = {
+  maxDuration: 60,
+};
+
 const jsonHeaders = {
   'cache-control': 'no-store',
   'content-type': 'application/json; charset=utf-8',
 };
 
-function jsonResponse(status, error) {
-  return new Response(JSON.stringify({ error }), {
-    status,
-    headers: jsonHeaders,
-  });
+function jsonResponse(res, status, error) {
+  res.writeHead(status, jsonHeaders);
+  res.end(JSON.stringify({ error }));
 }
 
 function getRuntimeEnvironmentVariable(...names) {
   for (const name of names) {
-    const value = globalThis.Netlify?.env?.get?.(name) ?? process.env[name];
+    const value = process.env[name];
     if (value?.trim()) return value.trim();
   }
 
@@ -37,9 +39,12 @@ function inferSupabaseUrlFromAssetBase() {
   }
 }
 
-async function verifyAdmin(request) {
-  const token = request.headers.get('x-admin-token')?.trim();
-  if (!token) return jsonResponse(401, 'An active admin session is required.');
+async function verifyAdmin(req, res) {
+  const token = req.headers['x-admin-token']?.trim();
+  if (!token) {
+    jsonResponse(res, 401, 'An active admin session is required.');
+    return false;
+  }
 
   const supabaseUrl =
     getRuntimeEnvironmentVariable('SUPABASE_URL', 'VITE_SUPABASE_URL') ??
@@ -51,10 +56,12 @@ async function verifyAdmin(request) {
 
   if (!supabaseUrl || !supabaseAnonKey) {
     console.error('Missing Supabase environment variables for the screenshot function.');
-    return jsonResponse(
+    jsonResponse(
+      res,
       503,
       'The screenshot service is missing its function-scoped Supabase configuration.',
     );
+    return false;
   }
 
   try {
@@ -65,23 +72,27 @@ async function verifyAdmin(request) {
       p_token: token,
     });
 
-    if (error || !data) return jsonResponse(401, 'The admin session is invalid or expired.');
-    return null;
+    if (error || !data) {
+      jsonResponse(res, 401, 'The admin session is invalid or expired.');
+      return false;
+    }
+    return true;
   } catch (error) {
     console.error('Admin-session verification failed for the screenshot function:', error);
-    return jsonResponse(503, 'The screenshot service could not verify the admin session.');
+    jsonResponse(res, 503, 'The screenshot service could not verify the admin session.');
+    return false;
   }
 }
 
-function isNetlifyRuntime() {
-  if (process.env.NETLIFY_DEV || process.platform === 'win32') return false;
-  return Boolean(process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.LAMBDA_TASK_ROOT);
+function isVercelRuntime() {
+  if (process.platform === 'win32') return false;
+  return process.env.VERCEL === '1';
 }
 
 async function launchContext(userDataDir) {
   const viewport = { width: 1440, height: 900 };
 
-  if (!isNetlifyRuntime()) {
+  if (!isVercelRuntime()) {
     return playwright.launchPersistentContext(userDataDir, {
       channel: process.platform === 'win32' ? 'msedge' : 'chrome',
       headless: true,
@@ -100,23 +111,21 @@ async function launchContext(userDataDir) {
   });
 }
 
-export default async function screenshot(request) {
-  if (request.method !== 'POST') {
-    return jsonResponse(405, 'Method not allowed.');
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    return jsonResponse(res, 405, 'Method not allowed.');
   }
 
-  const authorizationError = await verifyAdmin(request);
-  if (authorizationError) return authorizationError;
+  const authorized = await verifyAdmin(req, res);
+  if (!authorized) return;
 
-  let payload;
-  try {
-    payload = await request.json();
-  } catch {
-    return jsonResponse(400, 'A JSON request body is required.');
+  const payload = req.body;
+  if (!payload || typeof payload !== 'object') {
+    return jsonResponse(res, 400, 'A JSON request body is required.');
   }
 
   const rawUrl = typeof payload?.url === 'string' ? payload.url.trim() : '';
-  if (!rawUrl) return jsonResponse(400, 'A project link is required.');
+  if (!rawUrl) return jsonResponse(res, 400, 'A project link is required.');
 
   let targetUrl;
   try {
@@ -125,7 +134,7 @@ export default async function screenshot(request) {
       throw new Error('Unsupported protocol');
     }
   } catch {
-    return jsonResponse(400, 'Enter a valid website URL, including http:// or https://.');
+    return jsonResponse(res, 400, 'Enter a valid website URL, including http:// or https://.');
   }
 
   const userDataDir = '/tmp/playwright-' + randomUUID();
@@ -140,8 +149,7 @@ export default async function screenshot(request) {
       waitUntil: 'domcontentloaded',
       timeout: 25_000,
     });
-    await page.waitForLoadState('networkidle', { timeout: 5_000 }).catch(() => {});
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(1_000);
 
     const image = await page.screenshot({
       type: 'png',
@@ -149,18 +157,15 @@ export default async function screenshot(request) {
       animations: 'disabled',
     });
 
-    return new Response(new Uint8Array(image), {
-      status: 200,
-      headers: {
-        'cache-control': 'no-store',
-        'content-type': 'image/png',
-        'x-screenshot-url': encodeURIComponent(targetUrl.toString()),
-      },
-    });
+    res.setHeader('cache-control', 'no-store');
+    res.setHeader('content-type', 'image/png');
+    res.setHeader('x-screenshot-url', encodeURIComponent(targetUrl.toString()));
+    res.status(200).send(Buffer.from(image));
   } catch (error) {
-    console.error('Netlify screenshot generation failed:', error);
+    console.error('Screenshot generation failed:', error);
     const timedOut = error instanceof Error && error.name === 'TimeoutError';
-    return jsonResponse(
+    jsonResponse(
+      res,
       timedOut ? 504 : 502,
       timedOut
         ? 'The website took too long to load.'
