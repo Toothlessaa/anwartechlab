@@ -25,11 +25,25 @@ function getRuntimeEnvironmentVariable(...names) {
   return undefined;
 }
 
+function inferSupabaseUrlFromAssetBase() {
+  const assetBaseUrl = getRuntimeEnvironmentVariable('VITE_SUPABASE_ASSET_BASE_URL');
+  if (!assetBaseUrl) return undefined;
+
+  try {
+    const parsedUrl = new URL(assetBaseUrl);
+    return parsedUrl.pathname.includes('/storage/v1/object/public/') ? parsedUrl.origin : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 async function verifyAdmin(request) {
   const token = request.headers.get('x-admin-token')?.trim();
   if (!token) return jsonResponse(401, 'An active admin session is required.');
 
-  const supabaseUrl = getRuntimeEnvironmentVariable('SUPABASE_URL', 'VITE_SUPABASE_URL');
+  const supabaseUrl =
+    getRuntimeEnvironmentVariable('SUPABASE_URL', 'VITE_SUPABASE_URL') ??
+    inferSupabaseUrlFromAssetBase();
   const supabaseAnonKey = getRuntimeEnvironmentVariable(
     'SUPABASE_ANON_KEY',
     'VITE_SUPABASE_ANON_KEY',
@@ -60,6 +74,7 @@ async function verifyAdmin(request) {
 }
 
 function isNetlifyRuntime() {
+  if (process.env.NETLIFY_DEV || process.platform === 'win32') return false;
   return Boolean(process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.LAMBDA_TASK_ROOT);
 }
 
