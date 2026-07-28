@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Upload, X } from 'lucide-react';
-import { fetchProjectById, createProject, updateProject, uploadImage } from '../../lib/data';
+import { ArrowLeft, X } from 'lucide-react';
+import { fetchProjectById, createProject, updateProject, uploadImage, deleteImage } from '../../lib/data';
 import { relativeStoragePath, storageAsset } from '../../lib/assets';
+import { captureWebsiteScreenshot } from '../../lib/screenshots';
+import { ScreenshotGenerator } from '../ScreenshotGenerator';
 
 const sizes = ['hero', 'medium', 'wide'];
 const filters = ['Web', 'SaaS', 'Mobile', 'AI', 'Other'];
@@ -69,8 +71,8 @@ export default function ProjectForm() {
   const [link, setLink] = useState('');
   const [github, setGithub] = useState('');
   const [imagePath, setImagePath] = useState('');
-  const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [capturing, setCapturing] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -93,26 +95,30 @@ export default function ProjectForm() {
     });
   }, [id, isEdit, navigate]);
 
-  async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploading(true);
-    try {
-      const path = await uploadImage(file, 'projects');
-      setImagePath(path);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Upload failed');
-    } finally {
-      setUploading(false);
-    }
-  }
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError('');
     setSaving(true);
+    let uploadedImagePath = '';
+    let projectSaved = false;
+
     try {
       if (!title.trim()) throw new Error('Title is required');
+      const projectUrl = link.trim();
+      if (!projectUrl) throw new Error('A project link is required to generate its screenshot.');
+
+      let normalizedUrl: string;
+      try {
+        normalizedUrl = new URL(projectUrl).toString();
+      } catch {
+        throw new Error('Enter a complete project link, including https://');
+      }
+
+      setCapturing(true);
+      const screenshot = await captureWebsiteScreenshot(normalizedUrl);
+      uploadedImagePath = await uploadImage(screenshot, 'projects');
+      setCapturing(false);
+
       const data = {
         title: title.trim(),
         filter,
@@ -123,9 +129,9 @@ export default function ProjectForm() {
         solution: solution.trim() || undefined,
         features,
         tech,
-        image: imagePath,
+        image: uploadedImagePath,
         size,
-        link: link.trim() || undefined,
+        link: normalizedUrl,
         github: github.trim() || undefined,
       };
 
@@ -134,17 +140,29 @@ export default function ProjectForm() {
       } else {
         await createProject(data);
       }
+
+      projectSaved = true;
+
+      if (imagePath && imagePath !== uploadedImagePath && !imagePath.startsWith('http')) {
+        await deleteImage(imagePath).catch((cleanupError) => {
+          console.error('Failed to remove the previous project screenshot', cleanupError);
+        });
+      }
+
       navigate('/admin/projects');
     } catch (err) {
+      if (uploadedImagePath && !projectSaved) {
+        await deleteImage(uploadedImagePath).catch((cleanupError) => {
+          console.error('Failed to remove an unused project screenshot', cleanupError);
+        });
+      }
       setError(err instanceof Error ? err.message : 'Save failed');
     } finally {
+      setCapturing(false);
       setSaving(false);
     }
   }
-
-  const previewUrl = imagePath && !uploading
-    ? storageAsset(imagePath)
-    : null;
+  const previewUrl = imagePath ? storageAsset(imagePath) : null;
 
   return (
     <div>
@@ -223,9 +241,10 @@ export default function ProjectForm() {
           </div>
 
           <div>
-            <label className="text-sm font-medium text-zinc-300">Link</label>
+            <label className="text-sm font-medium text-zinc-300">Link *</label>
             <input type="url" value={link} onChange={(e) => setLink(e.target.value)}
               placeholder="https://"
+              required
               className="mt-1.5 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-zinc-500 outline-none focus:border-[#00FF41]/50"
             />
           </div>
@@ -249,19 +268,8 @@ export default function ProjectForm() {
           </div>
 
           <div className="sm:col-span-2">
-            <label className="text-sm font-medium text-zinc-300">Image</label>
-            <div className="mt-1.5">
-              {previewUrl && (
-                <div className="mb-3 overflow-hidden rounded-xl border border-white/10">
-                  <img src={previewUrl} alt="Preview" className="max-h-48 w-full object-contain bg-black/20" />
-                </div>
-              )}
-              <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-dashed border-white/20 bg-white/5 px-4 py-3 text-sm text-zinc-400 transition-colors hover:border-[#00FF41]/40 hover:text-[#00FF41]">
-                <Upload className={`h-4 w-4 ${uploading ? 'animate-pulse' : ''}`} />
-                {uploading ? 'Uploading…' : imagePath ? 'Replace image' : 'Upload image'}
-                <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" disabled={uploading} />
-              </label>
-            </div>
+            <label className="text-sm font-medium text-zinc-300">Website Screenshot</label>
+            <ScreenshotGenerator previewUrl={previewUrl} capturing={capturing} />
           </div>
         </div>
 
@@ -269,7 +277,7 @@ export default function ProjectForm() {
           <button type="submit" disabled={saving}
             className="rounded-xl bg-[#00FF41] px-6 py-2.5 text-sm font-bold text-[#09090B] transition-opacity hover:opacity-90 disabled:opacity-50"
           >
-            {saving ? 'Saving…' : isEdit ? 'Update Project' : 'Create Project'}
+            {capturing ? 'Capturing website…' : saving ? 'Saving…' : isEdit ? 'Update Project' : 'Create Project'}
           </button>
           <button type="button" onClick={() => navigate('/admin/projects')}
             className="rounded-xl border border-white/10 px-6 py-2.5 text-sm font-medium text-zinc-400 transition-colors hover:border-[#00FF41]/35 hover:bg-[#00FF41]/10 hover:text-[#00FF41]"
