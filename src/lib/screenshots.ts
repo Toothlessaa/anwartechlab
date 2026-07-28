@@ -1,11 +1,19 @@
+import { getAdminToken } from './adminAuth';
+
 type ScreenshotError = {
   error?: string;
 };
 
 export async function captureWebsiteScreenshot(url: string): Promise<File> {
+  const adminToken = getAdminToken();
+  if (!adminToken) throw new Error('Admin session expired. Please sign in again.');
+
   const response = await fetch('/api/screenshot', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Admin-Token': adminToken,
+    },
     body: JSON.stringify({ url }),
   });
 
