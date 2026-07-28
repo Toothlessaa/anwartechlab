@@ -31,7 +31,7 @@ export default function App() {
       <motion.div initial={reduce ? false : { opacity: 0 }} animate={showSplash ? { opacity: 0 } : { opacity: 1 }} transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}>
         <Navbar />
         <main>
-          <Hero />
+          <Hero start={!showSplash} />
           <Services />
           <Projects />
           <Team />

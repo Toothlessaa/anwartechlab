@@ -15,9 +15,11 @@ const techLogos = [
 
 const heroBg = storageAsset('web/bg.png');
 const heroTitle = 'Anwar Tech Labs';
+const heroSubtitle = 'Software engineers, frontend & app developers.';
 
-export function Hero() {
+export function Hero({ start = true }: { start?: boolean }) {
   const reduce = useReducedMotion();
+  const shouldReduce = Boolean(reduce);
   const { scrollYProgress } = useScroll();
   const y = useTransform(scrollYProgress, [0, 0.35], [0, reduce ? 0 : 90]);
 
@@ -28,9 +30,9 @@ export function Hero() {
       <FloatingShapes />
       <motion.div style={{ y }} className="absolute inset-x-0 top-10 mx-auto h-[30rem] max-w-5xl rounded-full bg-[radial-gradient(circle,rgba(251,146,60,0.1),rgba(15,23,42,0.12)_34%,transparent_72%)] blur-3xl" />
       <div className="absolute inset-x-0 bottom-0 h-56 bg-gradient-to-b from-transparent via-[#17171c]/80 to-[#17171c]" />
-      <motion.div initial={reduce ? false : { opacity: 0, y: 26 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }} className="relative z-10 mx-auto mt-8 flex max-w-6xl flex-col items-center text-center">
-        <TypewriterTitle text={heroTitle} />
-        <p className="pixel-copy mx-auto mt-8 max-w-2xl text-[12px] font-bold uppercase tracking-[0.18em] text-white">Software engineers, frontend & app developers.</p>
+      <motion.div initial={reduce ? false : { opacity: 0, y: 26 }} animate={start ? { opacity: 1, y: 0 } : { opacity: 0, y: 26 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }} className="relative z-10 mx-auto mt-8 flex max-w-6xl flex-col items-center text-center">
+        <HeroTitle text={heroTitle} />
+        <TypewriterSubtitle text={heroSubtitle} reduce={shouldReduce} start={start} />
         <div className="mt-12 h-20 w-full max-w-3xl opacity-75">
           <LogoLoop
             logos={techLogos}
@@ -46,8 +48,8 @@ export function Hero() {
           />
         </div>
       </motion.div>
-      <motion.a href="#expertise" aria-label="Scroll to expertise" initial={reduce ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }} className="absolute bottom-8 left-1/2 grid h-16 w-9 -translate-x-1/2 place-items-center rounded-full border-2 border-white/75 text-[#00FF41]">
-        <motion.span animate={reduce ? {} : { y: [-8, 7, -8], opacity: [0.45, 1, 0.45] }} transition={{ duration: 1.25, repeat: Infinity, ease: 'easeInOut' }}>
+      <motion.a href="#expertise" aria-label="Scroll to expertise" initial={reduce ? false : { opacity: 0, y: 12 }} animate={start ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }} transition={{ delay: start ? 1 : 0 }} className="absolute bottom-8 left-1/2 grid h-16 w-9 -translate-x-1/2 place-items-center rounded-full border-2 border-white/75 text-[#00FF41]">
+        <motion.span animate={reduce || !start ? {} : { y: [-8, 7, -8], opacity: [0.45, 1, 0.45] }} transition={{ duration: 1.25, repeat: Infinity, ease: 'easeInOut' }}>
           <ArrowDown className="h-5 w-5" />
         </motion.span>
       </motion.a>
@@ -55,10 +57,20 @@ export function Hero() {
   );
 }
 
-function TypewriterTitle({ text }: { text: string }) {
-  const [typed, setTyped] = useState('');
+function TypewriterSubtitle({ text, reduce, start }: { text: string; reduce: boolean; start: boolean }) {
+  const [typed, setTyped] = useState(reduce ? text : '');
 
   useEffect(() => {
+    if (reduce) {
+      setTyped(text);
+      return;
+    }
+
+    if (!start) {
+      setTyped('');
+      return;
+    }
+
     let index = 0;
     let interval: number | undefined;
 
@@ -72,24 +84,32 @@ function TypewriterTitle({ text }: { text: string }) {
         if (index >= text.length && interval) {
           window.clearInterval(interval);
         }
-      }, 82);
-    }, 320);
+      }, 42);
+    }, 1800);
 
     return () => {
       window.clearTimeout(timeout);
       if (interval) window.clearInterval(interval);
     };
-  }, [text]);
+  }, [reduce, start, text]);
 
   const isTyping = typed.length < text.length;
 
   return (
-    <h1 aria-label={text} className="grid max-w-full bg-white bg-clip-text text-4xl font-black uppercase leading-[0.9] tracking-[0.06em] text-transparent drop-shadow-[0_16px_42px_rgba(0,0,0,0.55)] sm:text-7xl sm:tracking-[0.11em] lg:text-[6.6rem] xl:text-[7.4rem]">
+    <p aria-label={text} className="pixel-copy mx-auto mt-8 grid max-w-2xl text-[12px] font-bold uppercase tracking-[0.18em] text-[#00FF41]">
       <span className="invisible col-start-1 row-start-1" aria-hidden="true">{text}</span>
       <span className="col-start-1 row-start-1" aria-hidden="true">
         {typed}
-        {isTyping ? <span className="ml-1 inline-block h-[0.78em] w-[0.08em] translate-y-[0.08em] bg-[#00FF41]" /> : null}
+        {isTyping ? <span className="ml-1 inline-block h-[1em] w-[0.08em] translate-y-[0.12em] bg-[#00FF41]" /> : null}
       </span>
+    </p>
+  );
+}
+
+function HeroTitle({ text }: { text: string }) {
+  return (
+    <h1 className="max-w-full bg-white bg-clip-text text-4xl font-black uppercase leading-[0.9] tracking-[0.06em] text-transparent drop-shadow-[0_16px_42px_rgba(0,0,0,0.55)] sm:text-7xl sm:tracking-[0.11em] lg:text-[6.6rem] xl:text-[7.4rem]">
+      {text}
     </h1>
   );
 }
