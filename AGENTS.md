@@ -1,0 +1,1 @@
+# RULE 1: DO NOT ANALYZE OR READ THE .env file
