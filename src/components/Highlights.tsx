@@ -32,7 +32,7 @@ function HighlightCard({ item, priority, decorative }: { item: Highlight; priori
 
   return (
     <article
-      className="highlight-card shrink-0 outline-none"
+      className="highlight-card cursor-target shrink-0 outline-none"
       data-flipped={flipped}
       tabIndex={decorative ? -1 : 0}
       onClick={handleClick}

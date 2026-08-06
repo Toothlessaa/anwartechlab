@@ -10,10 +10,12 @@
   padding: 1.5rem 0;
   animation: highlights-scroll var(--highlights-duration, 36s) linear infinite;
   will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
-.highlights-carousel:hover .highlights-carousel__track,
-.highlights-carousel:focus-within .highlights-carousel__track {
+.highlights-carousel:has(.highlight-card:hover) .highlights-carousel__track,
+.highlights-carousel:has(.highlight-card:focus-within) .highlights-carousel__track {
   animation-play-state: paused;
 }
 
@@ -23,10 +25,35 @@
 }
 
 .highlight-card {
+  position: relative;
   width: min(78vw, 300px);
   height: 370px;
   margin-right: 1rem;
   perspective: 1100px;
+}
+
+.highlight-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  border: 1px solid rgba(0, 255, 65, 0.9);
+  border-radius: 24px;
+  opacity: 0;
+  box-shadow:
+    inset 0 0 0 2px rgba(0, 255, 65, 0.78),
+    inset 0 0 14px rgba(0, 255, 65, 0.18),
+    0 0 8px rgba(0, 255, 65, 0.42),
+    0 0 24px rgba(0, 255, 65, 0.24),
+    0 18px 48px rgba(0, 255, 65, 0.12);
+  transition: opacity 280ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.highlight-card:hover::after,
+.highlight-card:focus::after,
+.highlight-card:focus-within::after {
+  opacity: 1;
 }
 
 .highlight-card__inner {
@@ -34,7 +61,8 @@
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
-  transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 620ms cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateZ(0);
 }
 
 .highlight-card:hover .highlight-card__inner,
@@ -53,6 +81,7 @@
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   box-shadow: 0 24px 64px rgba(3, 7, 18, 0.34);
+  transform: translateZ(0);
 }
 
 .highlight-card__back {
@@ -71,4 +100,5 @@
   .highlights-carousel__viewport { overflow-x: auto; mask-image: none; -webkit-mask-image: none; }
   .highlights-carousel__track { animation: none; }
   .highlight-card__inner { transition: none; }
+  .highlight-card::after { transition: none; }
 }
