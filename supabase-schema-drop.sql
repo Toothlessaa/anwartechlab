@@ -2,6 +2,7 @@
 -- Run this in your Supabase SQL Editor to tear down the CMS tables
 
 DROP TABLE IF EXISTS public.gallery_items CASCADE;
+DROP TABLE IF EXISTS public.highlights CASCADE;
 DROP TABLE IF EXISTS public.projects CASCADE;
 DROP TABLE IF EXISTS public.admin_sessions CASCADE;
 DROP TABLE IF EXISTS public.admin_users CASCADE;
@@ -9,6 +10,11 @@ DROP TABLE IF EXISTS public.admin_users CASCADE;
 DROP FUNCTION IF EXISTS public.admin_delete_gallery_item(TEXT, TEXT);
 DROP FUNCTION IF EXISTS public.admin_update_gallery_item(TEXT, TEXT, JSONB);
 DROP FUNCTION IF EXISTS public.admin_create_gallery_item(TEXT, JSONB);
+DROP FUNCTION IF EXISTS public.admin_reorder_highlights(TEXT, UUID[]);
+DROP FUNCTION IF EXISTS public.admin_delete_highlight(TEXT, UUID);
+DROP FUNCTION IF EXISTS public.admin_update_highlight(TEXT, UUID, JSONB);
+DROP FUNCTION IF EXISTS public.admin_create_highlight(TEXT, JSONB);
+DROP FUNCTION IF EXISTS public.admin_list_highlights(TEXT);
 DROP FUNCTION IF EXISTS public.admin_delete_project(TEXT, TEXT);
 DROP FUNCTION IF EXISTS public.admin_update_project(TEXT, TEXT, JSONB);
 DROP FUNCTION IF EXISTS public.admin_create_project(TEXT, JSONB);

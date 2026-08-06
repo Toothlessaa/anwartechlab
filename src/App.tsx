@@ -11,6 +11,7 @@ import { Projects } from './components/Projects';
 import { Services } from './components/Services';
 import { SplashScreen } from './components/SplashScreen';
 import { Team } from './components/Team';
+import { Highlights } from './components/Highlights';
 import TargetCursor from './components/TargetCursor';
 
 export default function App() {
@@ -35,6 +36,7 @@ export default function App() {
           <Services />
           <Projects />
           <Team />
+          <Highlights />
           <Gallery />
           <Milestones />
           <Contact />

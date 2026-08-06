@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from './supabase';
 import { storageAsset } from './assets';
-import type { Project, GalleryItem } from '../types';
+import type { Project, GalleryItem, Highlight, HighlightInput } from '../types';
 import { mediaPosts as fallbackMediaPosts, projects as fallbackProjects } from '../data/portfolio';
 import { getAdminToken } from './adminAuth';
 
@@ -48,6 +48,23 @@ function requireAdminToken(): string {
   const token = getAdminToken();
   if (!token) throw new Error('Admin session expired. Please sign in again.');
   return token;
+}
+
+function mapHighlight(row: Record<string, unknown>): Highlight {
+  return {
+    id: row.id as string,
+    title: (row.title as string) || '',
+    subtitle: (row.subtitle as string) || '',
+    description: (row.description as string) || '',
+    date_text: (row.date_text as string) || '',
+    location: (row.location as string) || '',
+    href: (row.href as string) || '',
+    image_url: (row.image_url as string) || '',
+    sort_order: Number(row.sort_order) || 0,
+    is_active: row.is_active !== false,
+    created_at: (row.created_at as string) || '',
+    updated_at: (row.updated_at as string) || '',
+  };
 }
 
 export async function uploadImage(file: File, folder: string): Promise<string> {
@@ -360,6 +377,82 @@ export async function deleteGalleryItem(id: string, imagePaths?: string[]): Prom
   const { error } = await supabase.rpc('admin_delete_gallery_item', {
     p_token: requireAdminToken(),
     p_id: id,
+  });
+  if (error) throw error;
+}
+
+export async function fetchHighlights(): Promise<Highlight[]> {
+  const { data, error } = await supabase
+    .from('highlights')
+    .select('*')
+    .eq('is_active', true)
+    .order('sort_order', { ascending: true })
+    .order('created_at', { ascending: true });
+
+  if (error) throw error;
+  return (data || []).map((row) => mapHighlight(row as Record<string, unknown>));
+}
+
+export function useHighlights() {
+  const [highlights, setHighlights] = useState<Highlight[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetchHighlights()
+      .then((items) => { if (!cancelled) setHighlights(items); })
+      .catch(() => { if (!cancelled) setHighlights([]); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
+  }, []);
+
+  return { highlights, loading };
+}
+
+export async function fetchAllHighlights(): Promise<Highlight[]> {
+  const { data, error } = await supabase.rpc('admin_list_highlights', {
+    p_token: requireAdminToken(),
+  });
+  if (error) throw error;
+  return ((data as Record<string, unknown>[] | null) || []).map(mapHighlight);
+}
+
+export async function fetchHighlightById(id: string): Promise<Highlight | null> {
+  const items = await fetchAllHighlights();
+  return items.find((item) => item.id === id) || null;
+}
+
+export async function createHighlight(highlight: HighlightInput, sortOrder: number): Promise<Highlight> {
+  const { data, error } = await supabase.rpc('admin_create_highlight', {
+    p_token: requireAdminToken(),
+    p_highlight: { ...highlight, sort_order: sortOrder },
+  });
+  if (error) throw error;
+  return mapHighlight(data as Record<string, unknown>);
+}
+
+export async function updateHighlight(id: string, highlight: Partial<HighlightInput>): Promise<Highlight> {
+  const { data, error } = await supabase.rpc('admin_update_highlight', {
+    p_token: requireAdminToken(),
+    p_id: id,
+    p_highlight: highlight,
+  });
+  if (error) throw error;
+  return mapHighlight(data as Record<string, unknown>);
+}
+
+export async function deleteHighlight(id: string): Promise<void> {
+  const { error } = await supabase.rpc('admin_delete_highlight', {
+    p_token: requireAdminToken(),
+    p_id: id,
+  });
+  if (error) throw error;
+}
+
+export async function reorderHighlights(ids: string[]): Promise<void> {
+  const { error } = await supabase.rpc('admin_reorder_highlights', {
+    p_token: requireAdminToken(),
+    p_ids: ids,
   });
   if (error) throw error;
 }

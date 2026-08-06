@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { NavLink, Navigate, Outlet, useNavigate } from 'react-router-dom';
-import { FolderKanban, Image, LayoutDashboard, LogOut, User } from 'lucide-react';
+import { FolderKanban, Image, LayoutDashboard, LogOut, Sparkles, User } from 'lucide-react';
 import { logoutAdmin, verifyAdminSession, type AdminUser } from '../../lib/adminAuth';
 
 const navItems = [
   { to: '/admin/projects', label: 'Projects', icon: FolderKanban },
   { to: '/admin/gallery', label: 'Media', icon: Image },
+  { to: '/admin/highlights', label: 'Highlights', icon: Sparkles },
 ];
 
 export default function AdminLayout() {

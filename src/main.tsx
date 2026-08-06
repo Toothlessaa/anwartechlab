@@ -8,6 +8,8 @@ import ProjectsList from './components/admin/ProjectsList';
 import ProjectForm from './components/admin/ProjectForm';
 import GalleryList from './components/admin/GalleryList';
 import GalleryForm from './components/admin/GalleryForm';
+import HighlightsList from './components/admin/HighlightsList';
+import HighlightForm from './components/admin/HighlightForm';
 import './styles.css';
 
 const router = createBrowserRouter([
@@ -24,6 +26,9 @@ const router = createBrowserRouter([
       { path: 'gallery', element: <GalleryList /> },
       { path: 'gallery/new', element: <GalleryForm /> },
       { path: 'gallery/:id/edit', element: <GalleryForm /> },
+      { path: 'highlights', element: <HighlightsList /> },
+      { path: 'highlights/new', element: <HighlightForm /> },
+      { path: 'highlights/:id/edit', element: <HighlightForm /> },
     ],
   },
 ]);
