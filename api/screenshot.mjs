@@ -18,7 +18,7 @@ function jsonResponse(status, error) {
 
 function getRuntimeEnvironmentVariable(...names) {
   for (const name of names) {
-    const value = globalThis.Netlify?.env?.get?.(name) ?? process.env[name];
+    const value = process.env[name];
     if (value?.trim()) return value.trim();
   }
 
@@ -73,15 +73,15 @@ async function verifyAdmin(request) {
   }
 }
 
-function isNetlifyRuntime() {
-  if (process.env.NETLIFY_DEV || process.platform === 'win32') return false;
-  return Boolean(process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.LAMBDA_TASK_ROOT);
+function isVercelRuntime() {
+  if (process.platform === 'win32') return false;
+  return process.env.VERCEL === '1';
 }
 
 async function launchContext(userDataDir) {
   const viewport = { width: 1440, height: 900 };
 
-  if (!isNetlifyRuntime()) {
+  if (!isVercelRuntime()) {
     return playwright.launchPersistentContext(userDataDir, {
       channel: process.platform === 'win32' ? 'msedge' : 'chrome',
       headless: true,
@@ -158,7 +158,7 @@ export default async function screenshot(request) {
       },
     });
   } catch (error) {
-    console.error('Netlify screenshot generation failed:', error);
+    console.error('Screenshot generation failed:', error);
     const timedOut = error instanceof Error && error.name === 'TimeoutError';
     return jsonResponse(
       timedOut ? 504 : 502,
