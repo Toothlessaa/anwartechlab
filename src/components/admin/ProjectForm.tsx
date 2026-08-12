@@ -5,6 +5,7 @@ import { fetchProjectById, createProject, updateProject, uploadImage, deleteImag
 import { relativeStoragePath, storageAsset } from '../../lib/assets';
 import { captureWebsiteScreenshot } from '../../lib/screenshots';
 import { ScreenshotGenerator } from '../ScreenshotGenerator';
+import HudSelect from './HudSelect';
 
 const sizes = ['hero', 'medium', 'wide'];
 const filters = ['Web', 'SaaS', 'Mobile', 'AI', 'Other'];
@@ -187,21 +188,11 @@ export default function ProjectForm() {
           </div>
 
           <div>
-            <label className="text-sm font-medium text-zinc-300">Filter</label>
-            <select value={filter} onChange={(e) => setFilter(e.target.value)}
-              className="mt-1.5 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none focus:border-[#00FF41]/50"
-            >
-              {filters.map((f) => <option key={f} value={f}>{f}</option>)}
-            </select>
+            <HudSelect label="[ FILTER ]" value={filter} options={filters} onChange={setFilter} />
           </div>
 
           <div>
-            <label className="text-sm font-medium text-zinc-300">Size</label>
-            <select value={size} onChange={(e) => setSize(e.target.value)}
-              className="mt-1.5 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none focus:border-[#00FF41]/50"
-            >
-              {sizes.map((s) => <option key={s} value={s}>{s}</option>)}
-            </select>
+            <HudSelect label="[ SIZE ]" value={size} options={sizes} onChange={setSize} />
           </div>
 
           <div className="sm:col-span-2">
