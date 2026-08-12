@@ -89,7 +89,7 @@ function StatusClock() {
   }, []);
   return (
     <span className="pixel-copy text-[11px] font-bold tracking-widest text-[#00FF41]/70">
-      {now.toISOString().slice(11, 19)} UTC
+      {now.toLocaleTimeString('en-GB', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' })} LOCAL
     </span>
   );
 }
