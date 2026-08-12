@@ -122,6 +122,65 @@ button, input, textarea, select { font: inherit; }
   100% { transform: translateY(185%); opacity: 0; }
 }
 
+@keyframes caret-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes scanline-sweep {
+  0% { top: -18%; opacity: 0; }
+  7% { opacity: 1; }
+  93% { opacity: 1; }
+  100% { top: 118%; opacity: 0; }
+}
+
+@keyframes text-flicker {
+  0%, 100% { opacity: 1; }
+  2% { opacity: 0.35; }
+  4% { opacity: 1; }
+  7% { opacity: 0.55; }
+  9% { opacity: 1; }
+  46% { opacity: 1; }
+  48% { opacity: 0.4; }
+  50% { opacity: 1; }
+  72% { opacity: 1; }
+  74% { opacity: 0.65; }
+  76% { opacity: 1; }
+}
+
+@keyframes glitch-shift {
+  0%, 83%, 100% { transform: translate(0, 0); clip-path: inset(0 0 0 0); }
+  84% { transform: translate(-3px, 1px); clip-path: inset(12% 0 55% 0); }
+  87% { transform: translate(3px, -1px); clip-path: inset(45% 0 18% 0); }
+  90% { transform: translate(-2px, 0); clip-path: inset(22% 0 60% 0); }
+  93% { transform: translate(0, 0); clip-path: inset(0 0 0 0); }
+}
+
+@keyframes hud-ping {
+  0% { transform: scale(1); opacity: 0.9; }
+  100% { transform: scale(2.1); opacity: 0; }
+}
+
+.hud-flicker { animation: text-flicker 7s linear infinite 3.2s; }
+
+.hud-glitch { animation: glitch-shift 4.4s linear infinite 2s; }
+
+.scanlines {
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.028) 0px,
+    rgba(255, 255, 255, 0.028) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+
+.crt-vignette { box-shadow: inset 0 0 220px rgba(0, 0, 0, 0.9); }
+
+.hud-caret { animation: caret-blink 1s steps(1) infinite; }
+
+.scan-sweep { animation: scanline-sweep 7s linear infinite; }
+
 @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
   .glass { background: rgba(17, 24, 39, 0.92); }
 }
