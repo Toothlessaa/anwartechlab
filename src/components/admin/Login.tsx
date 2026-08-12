@@ -168,7 +168,7 @@ export default function Login() {
 
       <header className="pointer-events-none absolute left-6 top-6 z-20 sm:left-8 sm:top-8">
         <motion.p
-          className="pixel-copy text-[11px] font-bold tracking-[0.28em] text-[#00FF41]/80"
+          className="pixel-copy text-[10px] font-bold tracking-[0.2em] text-[#00FF41]/80 sm:text-[11px] sm:tracking-[0.28em]"
           initial={reduce ? false : { opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: booted ? 0.4 : 3.3, ease }}
