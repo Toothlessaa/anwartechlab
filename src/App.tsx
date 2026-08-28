@@ -26,12 +26,12 @@ export default function App() {
   }, [showSplash]);
 
   return (
-    <div className="min-h-screen overflow-x-hidden">
+    <div className="flex min-h-screen flex-col overflow-x-hidden">
       <AnimatePresence>{showSplash ? <SplashScreen onComplete={() => setShowSplash(false)} /> : null}</AnimatePresence>
       <TargetCursor targetSelector="a, button, .cursor-target" spinDuration={2} hideDefaultCursor parallaxOn cursorColor="#00FF41" cursorColorOnTarget="#7CFF7C" />
       <motion.div initial={reduce ? false : { opacity: 0 }} animate={showSplash ? { opacity: 0 } : { opacity: 1 }} transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}>
         <Navbar />
-        <main>
+        <main className="flex-1">
           <Hero start={!showSplash} />
           <Services />
           <Projects />
