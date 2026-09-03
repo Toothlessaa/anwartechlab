@@ -20,9 +20,9 @@ export function Footer() {
             target={href.startsWith('http') ? '_blank' : undefined}
             rel={href.startsWith('http') ? 'noreferrer' : undefined}
             aria-label={label}
-            className="grid h-11 w-11 place-items-center border-b border-white/12 text-[#93ff31] transition last:border-b-0 hover:bg-[#93ff31]/10 hover:text-[#baff5f] hover:shadow-[inset_0_0_18px_rgba(147,255,49,0.18)] sm:h-12 sm:w-12"
+            className="grid h-12 w-12 place-items-center border-b border-white/12 text-[#93ff31] transition last:border-b-0 hover:bg-[#93ff31]/10 hover:text-[#baff5f] hover:shadow-[inset_0_0_18px_rgba(147,255,49,0.18)]"
           >
-            <Icon className="h-5 w-5 drop-shadow-[0_0_7px_rgba(147,255,49,0.9)]" />
+            <Icon className="h-6 w-6 drop-shadow-[0_0_7px_rgba(147,255,49,0.9)]" />
           </a>
         ))}
       </div>

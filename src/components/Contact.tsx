@@ -35,14 +35,14 @@ export function Contact() {
           <h2 className="max-w-sm text-3xl font-black leading-tight tracking-[-0.04em] text-white">Available for select freelance opportunities</h2>
           <p className="pixel-copy mt-9 max-w-sm text-[12px] font-bold leading-5 text-white">Have an exciting project you need help with? Send us an email or contact the team via instant message.</p>
         </div>
-        <div className="flex w-full items-stretch lg:w-[60%]">
+        <div className="flex w-full items-stretch lg:w-[60%] lg:items-start lg:justify-end">
           {testimonials.map((quote, item) => (
-            <article key={item} className="flex aspect-square w-full max-w-md flex-col justify-between border border-[#00FF41]/20 bg-black/58 p-8 text-white shadow-[inset_0_0_32px_rgba(0,255,65,0.08)] backdrop-blur-sm">
+            <article key={item} className="flex w-full max-w-sm flex-col justify-between border border-[#00FF41]/20 bg-black/58 p-5 text-white shadow-[inset_0_0_32px_rgba(0,255,65,0.08)] backdrop-blur-sm">
               <div>
-                <Quote className="h-10 w-10 fill-[#00FF41]/20 text-[#9cff9c] drop-shadow-[0_0_10px_rgba(255,255,65,0.65)]" />
-                <p className="pixel-copy mt-12 text-[12px] font-bold leading-5 text-white/90">{quote}</p>
+                <Quote className="h-8 w-8 fill-[#00FF41]/20 text-[#9cff9c] drop-shadow-[0_0_10px_rgba(255,255,65,0.65)]" />
+                <p className="pixel-copy mt-5 text-[12px] font-bold leading-5 text-white/90">{quote}</p>
               </div>
-              <div className="mt-8 flex items-center justify-between">
+              <div className="mt-5 flex items-center justify-between">
                 <p className="pixel-copy text-[11px] font-bold text-[#baffba]">- Noel Blanco, CEO</p>
                 <img src={ceoPhoto} alt="Noel Blanco" className="h-12 w-12 rounded-full border-2 border-[#00FF41]/80 object-cover object-top shadow-[0_0_18px_rgba(0,255,65,0.35)]" />
               </div>
