@@ -14,7 +14,7 @@ export const navItems = [
 export const services = [
   { title: 'Software Development', icon: Globe2, description: 'Experienced in both functional and OOP: Dart, Python, Java, JavaScript, TypeScript.' },
   { title: 'Frontend Dev. React, NextJS', icon: Code2, description: 'Passionate about UI/UX. Years of development experience in HTML, CSS, JS, React and NextJS frameworks.' },
-  { title: 'Flutter Dev. Android, iOS', icon: Smartphone, description: 'Skilled in developing hybrid mobile apps and cross-platform solutions using the Flutter framework.' },
+  { title: 'React Native Dev. Android, iOS', icon: Smartphone, description: 'Skilled in developing hybrid mobile apps and cross-platform solutions using React Native.' },
 ];
 
 export const projects = [

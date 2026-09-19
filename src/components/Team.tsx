@@ -3,6 +3,7 @@ import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion
 import { BadgeCheck } from 'lucide-react';
 import { members } from '../data/portfolio';
 import { storageAsset } from '../lib/assets';
+import { BinaryBackground } from './BinaryBackground';
 
 const roleDetails = [
   'Leads client communication, project direction, and delivery.',
@@ -79,7 +80,8 @@ export function Team() {
   const pathOpacity = useTransform(scrollYProgress, [0, 0.08, 1], [0, 1, 1]);
 
   return (
-    <section id="team" className="relative overflow-hidden px-4 py-24 sm:py-32">
+    <section id="team" className="binary-surface relative overflow-hidden px-4 py-24 sm:py-32">
+      <BinaryBackground />
       <div className="pointer-events-none absolute left-1/2 top-24 h-[36rem] w-[36rem] -translate-x-1/2 rounded-full bg-[#8B5CF6]/10 blur-3xl" />
       <div className="pointer-events-none absolute right-[-10rem] bottom-20 h-80 w-80 rounded-full bg-[#5EE7FF]/10 blur-3xl" />
 

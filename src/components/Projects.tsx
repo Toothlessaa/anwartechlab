@@ -3,6 +3,7 @@ import { AnimatePresence, motion, useInView, useReducedMotion, useSpring, useTra
 import { useProjects } from '../lib/data';
 import { ProjectCard, type Project } from './ProjectCard';
 import { Button } from './ui/button';
+import { BinaryBackground } from './BinaryBackground';
 
 const filters = ['All', 'Web', 'SaaS'];
 const premiumEase = [0.16, 1, 0.3, 1] as const;
@@ -22,12 +23,13 @@ export function Projects() {
   return (
     <motion.section
       id="projects"
-      className="relative overflow-hidden px-4 py-20 sm:py-24"
+      className="binary-surface relative overflow-hidden px-4 py-20 sm:py-24"
       initial={reduce ? false : { y: 28 }}
       whileInView={{ y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.58, ease: premiumEase }}
     >
+      <BinaryBackground />
       <div className="pointer-events-none absolute left-[8%] top-20 h-64 w-64 rounded-full bg-[#3B82F6]/10 blur-3xl" />
       <div className="pointer-events-none absolute right-[10%] bottom-16 h-64 w-64 rounded-full bg-[#7C3AED]/10 blur-3xl" />
 

@@ -5,6 +5,7 @@ import { SiNextdotjs, SiReact, SiTailwindcss, SiTypescript } from 'react-icons/s
 import { storageAsset } from '../lib/assets';
 import { FloatingShapes } from './FloatingShapes';
 import LogoLoop from './LogoLoop';
+import { BinaryBackground } from './BinaryBackground';
 
 const techLogos = [
   { node: <SiReact />, title: 'React', href: 'https://react.dev' },
@@ -24,13 +25,14 @@ export function Hero({ start = true }: { start?: boolean }) {
   const y = useTransform(scrollYProgress, [0, 0.35], [0, reduce ? 0 : 90]);
 
   return (
-    <section id="home" className="relative flex min-h-[100dvh] items-center justify-center overflow-hidden bg-[#101923] px-4 pb-20 pt-20">
+    <section id="home" className="binary-surface relative flex min-h-[100dvh] items-center justify-center overflow-hidden bg-[#101923] px-4 pb-20 pt-20">
       <img src={heroBg} alt="" className="absolute inset-0 h-full w-full object-cover object-center opacity-95" aria-hidden="true" />
       <div className="absolute inset-0 bg-[#0A0F1F]/20" />
       <FloatingShapes />
       <motion.div style={{ y }} className="absolute inset-x-0 top-10 mx-auto h-[30rem] max-w-5xl rounded-full bg-[radial-gradient(circle,rgba(251,146,60,0.1),rgba(15,23,42,0.12)_34%,transparent_72%)] blur-3xl" />
       <div className="absolute inset-x-0 bottom-0 h-56 bg-gradient-to-b from-transparent via-[#17171c]/80 to-[#17171c]" />
-      <motion.div initial={reduce ? false : { opacity: 0, y: 26 }} animate={start ? { opacity: 1, y: 0 } : { opacity: 0, y: 26 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }} className="relative z-10 mx-auto mt-8 flex max-w-6xl flex-col items-center text-center">
+      <BinaryBackground />
+      <motion.div initial={reduce ? false : { opacity: 0, y: 26 }} animate={start ? { opacity: 1, y: 0 } : { opacity: 0, y: 26 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }} className="relative z-10 mx-auto mt-8 flex w-full min-w-0 max-w-6xl flex-col items-center text-center">
         <HeroTitle text={heroTitle} />
         <TypewriterSubtitle text={heroSubtitle} reduce={shouldReduce} start={start} />
         <div className="mt-12 h-20 w-full max-w-3xl opacity-75">

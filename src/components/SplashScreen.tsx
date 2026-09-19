@@ -1,5 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion, useMotionValue, useReducedMotion, useSpring, useTransform } from 'framer-motion';
+import { BinaryBackground } from './BinaryBackground';
+import { useSound } from './SoundProvider';
 
 const services = ['Web Development', 'Web Development', 'UI/UX Design', 'Artificial Intelligence', 'Cloud Solutions'];
 const floatingTokens = ['<>', '{}', 'const', 'API', 'React', 'TS', 'AI', 'SaaS', 'Cloud'];
@@ -16,6 +18,21 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
   const [serviceIndex, setServiceIndex] = useState(0);
   const [deleting, setDeleting] = useState(false);
   const [leaving, setLeaving] = useState(false);
+  const { enabled, tick: playKeySound, whoosh } = useSound();
+  const entrancePlayed = useRef(false);
+  const exitPlayed = useRef(false);
+
+  useEffect(() => {
+    if (!enabled) return;
+    if (leaving && !exitPlayed.current) {
+      exitPlayed.current = true;
+      whoosh(true);
+    } else if (!leaving && !entrancePlayed.current) {
+      entrancePlayed.current = true;
+      whoosh();
+    }
+  }, [enabled, leaving, whoosh]);
+
   const pointerX = useMotionValue(0);
   const pointerY = useMotionValue(0);
   const smoothX = useSpring(pointerX, { stiffness: 70, damping: 22, mass: 0.25 });
@@ -47,6 +64,7 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
 
     const start = performance.now();
     let frame = 0;
+    let completeTimer = 0;
     const duration = 5600;
 
     const tick = (time: number) => {
@@ -57,11 +75,14 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
         return;
       }
       setLeaving(true);
-      window.setTimeout(onComplete, 780);
+      completeTimer = window.setTimeout(onComplete, 780);
     };
 
     frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.clearTimeout(completeTimer);
+    };
   }, [onComplete, reduce]);
 
   useEffect(() => {
@@ -90,7 +111,8 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
   return (
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 z-[999] grid min-h-[100dvh] overflow-hidden bg-[#09090B] text-[#F8FAFC]"
+        data-splash
+        className="binary-surface fixed inset-0 z-[999] grid min-h-[100dvh] overflow-hidden bg-[#09090B] text-[#F8FAFC]"
         initial={{ opacity: 1, clipPath: 'circle(140% at 50% 50%)' }}
         animate={leaving ? { opacity: 0, clipPath: 'circle(0% at 50% 50%)' } : { opacity: 1, clipPath: 'circle(140% at 50% 50%)' }}
         exit={{ opacity: 0 }}
@@ -101,6 +123,7 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
           pointerY.set((event.clientY / window.innerHeight - 0.5) * 2);
         }}
       >
+        <BinaryBackground />
         <motion.div
           className="absolute inset-0 opacity-55"
           style={{ x: reduce ? 0 : gridX, y: reduce ? 0 : gridY }}
@@ -179,7 +202,7 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
 
             <motion.div className="mt-7 flex flex-wrap justify-center gap-[0.34em] text-center text-2xl font-black tracking-[0.24em] text-white sm:text-4xl" initial="hidden" animate="show" variants={{ hidden: {}, show: { transition: { delayChildren: 2.35, staggerChildren: 0.045 } } }}>
               {'ANWAR TECH LABS'.split('').map((char, index) => (
-                <motion.span key={`${char}-${index}`} className={char === ' ' ? 'w-3 sm:w-5' : ''} variants={{ hidden: { opacity: 0, y: 18, filter: 'blur(8px)' }, show: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.55, ease: premiumEase } } }}>
+                <motion.span key={`${char}-${index}`} className={char === ' ' ? 'w-3 sm:w-5' : ''} variants={{ hidden: { opacity: 0, y: 18, filter: 'blur(8px)' }, show: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.55, ease: premiumEase } } }} onAnimationStart={char !== ' ' ? playKeySound : undefined}>
                   {char}
                 </motion.span>
               ))}

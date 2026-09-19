@@ -3,6 +3,7 @@ import { NavLink, Navigate, Outlet, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { FolderKanban, Image, LogOut, Menu, Sparkles, User, X } from 'lucide-react';
 import { logoutAdmin, verifyAdminSession, type AdminUser } from '../../lib/adminAuth';
+import { BinaryBackground } from '../BinaryBackground';
 
 const navItems = [
   { to: '/admin/projects', label: 'PROJECTS', icon: FolderKanban },
@@ -53,7 +54,8 @@ export default function AdminLayout() {
 
   if (session === null) {
     return (
-      <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#07080B]">
+      <div className="binary-surface relative flex min-h-screen items-center justify-center overflow-hidden bg-[#07080B]">
+        <BinaryBackground />
         <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(0,255,65,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,65,0.05)_1px,transparent_1px)] bg-[size:54px_54px] [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]" />
         <div className="scanlines pointer-events-none absolute inset-0 opacity-50" />
         <div className="relative flex flex-col items-center gap-5">
@@ -220,7 +222,8 @@ export default function AdminLayout() {
         {sidebarContent}
       </aside>
 
-      <main className="relative min-w-0 flex-1 overflow-auto">
+      <main className="binary-surface relative min-w-0 flex-1 overflow-auto">
+        <BinaryBackground />
         <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(0,255,65,0.028)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,65,0.028)_1px,transparent_1px)] bg-[size:54px_54px] [mask-image:radial-gradient(ellipse_at_top,black,transparent_82%)]" />
         <div className="scanlines pointer-events-none absolute inset-0 opacity-30" />
         <div className="relative mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-8">

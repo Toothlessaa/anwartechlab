@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
@@ -17,6 +17,7 @@ import TargetCursor from './components/TargetCursor';
 export default function App() {
   const reduce = useReducedMotion();
   const [showSplash, setShowSplash] = useState(true);
+  const completeSplash = useCallback(() => setShowSplash(false), []);
 
   useEffect(() => {
     document.body.style.overflow = showSplash ? 'hidden' : '';
@@ -27,7 +28,7 @@ export default function App() {
 
   return (
     <div className="flex min-h-screen flex-col overflow-x-hidden">
-      <AnimatePresence>{showSplash ? <SplashScreen onComplete={() => setShowSplash(false)} /> : null}</AnimatePresence>
+      <AnimatePresence>{showSplash ? <SplashScreen onComplete={completeSplash} /> : null}</AnimatePresence>
       <TargetCursor targetSelector="a, button, .cursor-target" spinDuration={2} hideDefaultCursor parallaxOn cursorColor="#00FF41" cursorColorOnTarget="#7CFF7C" />
       <motion.div initial={reduce ? false : { opacity: 0 }} animate={showSplash ? { opacity: 0 } : { opacity: 1 }} transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}>
         <Navbar />

@@ -1,5 +1,56 @@
 @import "tailwindcss";
 
+.binary-surface { isolation: isolate; }
+#home > .binary-background { z-index: 0; }
+.binary-background {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.22;
+  mask-image: linear-gradient(transparent, black 12%, black 88%, transparent);
+}
+.binary-background span {
+  position: absolute;
+  top: 0;
+  width: 1ch;
+  overflow-wrap: anywhere;
+  color: #00ff41;
+  font: 12px/1.8 "Courier New", monospace;
+  animation: binary-fall linear infinite;
+  animation-play-state: paused;
+}
+.binary-background[data-running="true"] span { animation-play-state: running; }
+@keyframes binary-fall { from { transform: translateY(-50%); } to { transform: translateY(0); } }
+@media (max-width: 640px) {
+  .binary-background span:nth-child(even) { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .binary-background span { animation: none; }
+}
+.sound-toggle {
+  position: fixed;
+  z-index: 1100;
+  left: max(1rem, env(safe-area-inset-left));
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid #00ff414d;
+  border-radius: 0.5rem;
+  background: #090d0bf2;
+  color: #baffba;
+  font-size: 12px;
+  cursor: pointer;
+}
+.sound-toggle:hover { border-color: #00ff41; }
+.sound-toggle:focus-visible { outline: 2px solid #00ff41; outline-offset: 4px; }
+body:has([data-splash]) .sound-toggle { bottom: auto; top: max(1rem, env(safe-area-inset-top)); }
+
 :root {
   color-scheme: dark;
   font-family: Arial, Helvetica, ui-sans-serif, system-ui, sans-serif;

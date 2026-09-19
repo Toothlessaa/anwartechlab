@@ -1,13 +1,6 @@
 import { Quote } from 'lucide-react';
 import { storageAsset } from '../lib/assets';
-
-const matrixStreams = Array.from({ length: 24 }, (_, index) => ({
-  id: index,
-  left: `${index * 4.35}%`,
-  delay: `${(index % 8) * -1.15}s`,
-  duration: `${7 + (index % 6)}s`,
-  text: index % 3 === 0 ? '010110100111001011010011' : index % 3 === 1 ? '101001011100101101001110' : '001101011010010111001011',
-}));
+import { BinaryBackground } from './BinaryBackground';
 
 const ceoPhoto = storageAsset('team/noel.png');
 const testimonials = [
@@ -16,20 +9,12 @@ const testimonials = [
 
 export function Contact() {
   return (
-    <section id="contact" className="relative mt-12 flex flex-1 flex-col overflow-hidden bg-[#020402] px-4">
+    <section id="contact" className="binary-surface relative mt-12 flex flex-1 flex-col overflow-hidden bg-[#020402] px-4">
       <div className="pointer-events-none absolute inset-0 opacity-70" aria-hidden="true">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_24%,rgba(0,255,65,0.18),transparent_28rem),radial-gradient(circle_at_78%_76%,rgba(0,255,65,0.12),transparent_24rem),linear-gradient(180deg,rgba(0,0,0,0.25),rgba(0,0,0,0.88))]" />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,255,65,0.08)_1px,transparent_1px),linear-gradient(180deg,rgba(0,255,65,0.055)_1px,transparent_1px)] bg-[size:54px_54px]" />
-        {matrixStreams.map((stream) => (
-          <span
-            key={stream.id}
-            className="matrix-stream pixel-copy"
-            style={{ left: stream.left, animationDelay: stream.delay, animationDuration: stream.duration }}
-          >
-            {stream.text}
-          </span>
-        ))}
       </div>
+      <BinaryBackground />
       <div className="relative z-10 mx-auto flex flex-1 flex-col gap-8 py-12 lg:w-full lg:flex-row lg:items-stretch lg:py-20">
         <div className="flex w-full flex-col justify-center lg:w-[40%] lg:pr-8">
           <h2 className="max-w-sm text-3xl font-black leading-tight tracking-[-0.04em] text-white">Available for select freelance opportunities</h2>

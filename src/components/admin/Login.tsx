@@ -3,6 +3,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 import { loginAdmin } from '../../lib/adminAuth';
+import { BinaryBackground } from '../BinaryBackground';
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -14,14 +15,6 @@ const BOOT_LINES = [
 ];
 
 const TOKENS = ['ACCESS', '0x7F41', '{ }', 'AUTH', 'root@atl', 'SYS://', 'DECRYPT', '>>', 'KEY.gen', '//'];
-
-const matrixStreams = Array.from({ length: 22 }, (_, index) => ({
-  id: index,
-  left: `${index * 4.65}%`,
-  delay: `${(index % 7) * -1.35}s`,
-  duration: `${7 + (index % 6)}s`,
-  text: index % 3 === 0 ? '010110100111001011010011' : index % 3 === 1 ? '101001011100101101001110' : '110101101001011100101101',
-}));
 
 function HudRings() {
   const reduce = useReducedMotion();
@@ -129,7 +122,7 @@ export default function Login() {
   }
 
   return (
-    <div className="relative flex min-h-[100dvh] items-center justify-center overflow-hidden bg-[#07080B] px-4 py-10">
+    <div className="binary-surface relative flex min-h-[100dvh] items-center justify-center overflow-hidden bg-[#07080B] px-4 py-10">
       <HudRings />
 
       <div className="pointer-events-none absolute inset-0" aria-hidden="true">
@@ -154,17 +147,7 @@ export default function Login() {
         ))}
       </div>
 
-      <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-        {matrixStreams.map((stream) => (
-          <span
-            key={stream.id}
-            className="matrix-stream pixel-copy"
-            style={{ left: stream.left, animationDelay: stream.delay, animationDuration: stream.duration }}
-          >
-            {stream.text}
-          </span>
-        ))}
-      </div>
+      <BinaryBackground />
 
       <header className="pointer-events-none absolute left-6 top-6 z-20 sm:left-8 sm:top-8">
         <motion.p

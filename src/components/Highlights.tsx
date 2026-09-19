@@ -6,6 +6,7 @@ import { storageAsset } from '../lib/assets';
 import { useHighlights } from '../lib/data';
 import type { Highlight } from '../types';
 import './Highlights.css';
+import { BinaryBackground } from './BinaryBackground';
 
 const TRACK_COPIES = 3;
 const premiumEase = [0.16, 1, 0.3, 1] as const;
@@ -98,7 +99,8 @@ export function Highlights() {
   } as CSSProperties;
 
   return (
-    <section id="highlights" className="highlights-carousel relative overflow-hidden bg-[#0d1110] py-20 sm:py-28" aria-labelledby="highlights-title">
+    <section id="highlights" className="binary-surface highlights-carousel relative overflow-hidden bg-[#0d1110] py-20 sm:py-28" aria-labelledby="highlights-title">
+      <BinaryBackground />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_20%,rgba(0,255,65,0.1),transparent_22rem),linear-gradient(180deg,rgba(255,255,255,0.015),transparent)]" />
       <motion.div
         initial={reduce ? false : { opacity: 0, y: 24 }}

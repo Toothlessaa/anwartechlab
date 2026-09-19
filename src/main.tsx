@@ -11,6 +11,7 @@ import GalleryForm from './components/admin/GalleryForm';
 import HighlightsList from './components/admin/HighlightsList';
 import HighlightForm from './components/admin/HighlightForm';
 import './styles.css';
+import { SoundProvider } from './components/SoundProvider';
 
 const router = createBrowserRouter([
   { path: '/', element: <App /> },
@@ -35,6 +36,6 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('app')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <SoundProvider><RouterProvider router={router} /></SoundProvider>
   </StrictMode>,
 );

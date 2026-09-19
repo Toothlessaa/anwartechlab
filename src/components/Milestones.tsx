@@ -1,6 +1,7 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { milestones } from '../data/portfolio';
+import { BinaryBackground } from './BinaryBackground';
 
 const premiumEase = [0.16, 1, 0.3, 1] as const;
 
@@ -8,7 +9,8 @@ export function Milestones() {
   const reduce = useReducedMotion();
 
   return (
-    <section id="experience" className="relative overflow-hidden px-4 py-20 sm:py-24">
+    <section id="experience" className="binary-surface relative overflow-hidden px-4 py-20 sm:py-24">
+      <BinaryBackground />
       <div className="pointer-events-none absolute left-[12%] top-20 h-64 w-64 rounded-full bg-[#7C3AED]/10 blur-3xl" />
       <div className="pointer-events-none absolute right-[12%] bottom-12 h-64 w-64 rounded-full bg-[#06B6D4]/10 blur-3xl" />
 

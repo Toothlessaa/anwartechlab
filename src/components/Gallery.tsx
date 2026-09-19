@@ -2,6 +2,7 @@ import { ChevronLeft, ChevronRight, Images, type LucideIcon, Sparkles } from 'lu
 import { useEffect, useMemo, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { useGalleryItems } from '../lib/data';
+import { BinaryBackground } from './BinaryBackground';
 
 const categoryIcons: Record<string, LucideIcon> = {
   Update: Sparkles,
@@ -78,7 +79,8 @@ export function Gallery() {
   }
 
   return (
-    <section id="gallery" className="relative max-w-[100vw] overflow-x-clip bg-[#101014] px-3 py-16 sm:px-4 sm:py-32">
+    <section id="gallery" className="binary-surface relative max-w-[100vw] overflow-x-clip bg-[#101014] px-3 py-16 sm:px-4 sm:py-32">
+      <BinaryBackground />
       <div className="pointer-events-none absolute left-[-8rem] top-20 h-80 w-80 rounded-full bg-[#00FF41]/10 blur-3xl" />
       <div className="pointer-events-none absolute bottom-10 right-[-8rem] h-96 w-96 rounded-full bg-[#00FF41]/8 blur-3xl" />
 
