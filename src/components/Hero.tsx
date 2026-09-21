@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { ArrowDown } from 'lucide-react';
 import { SiNextdotjs, SiReact, SiTailwindcss, SiTypescript } from 'react-icons/si';
-import { storageAsset } from '../lib/assets';
 import { FloatingShapes } from './FloatingShapes';
 import LogoLoop from './LogoLoop';
 import { BinaryBackground } from './BinaryBackground';
@@ -15,7 +14,7 @@ const techLogos = [
   { node: <SiTailwindcss />, title: 'Tailwind CSS', href: 'https://tailwindcss.com' },
 ];
 
-const heroBg = storageAsset('web/bg.png');
+const heroBg = '/logo1.png';
 const heroTitle = 'Anwar Tech Labs';
 const heroSubtitle = 'Software engineers, frontend & app developers.';
 
