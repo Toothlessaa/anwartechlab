@@ -7,7 +7,6 @@
   pointer-events: none;
   z-index: 9999;
   transform: translate(-50%, -50%);
-  filter: drop-shadow(0 0 10px rgba(0, 255, 65, 0.22));
 }
 
 .target-cursor-dot {
@@ -28,7 +27,7 @@
   top: 50%;
   width: 12px;
   height: 12px;
-  border: 3px solid #fff;
+  border: 3px solid #00ff41;
   will-change: transform;
 }
 

@@ -80,9 +80,7 @@ export function Gallery() {
 
   return (
     <section id="gallery" className="binary-surface relative max-w-[100vw] overflow-x-clip bg-[#101014] px-3 py-16 sm:px-4 sm:py-32">
-      <BinaryBackground />
-      <div className="pointer-events-none absolute left-[-8rem] top-20 h-80 w-80 rounded-full bg-[#00FF41]/10 blur-3xl" />
-      <div className="pointer-events-none absolute bottom-10 right-[-8rem] h-96 w-96 rounded-full bg-[#00FF41]/8 blur-3xl" />
+      <BinaryBackground section="gallery" />
 
       <div className="relative mx-auto w-full min-w-0 max-w-[calc(100vw-1.5rem)] sm:max-w-7xl">
         <motion.div
@@ -92,7 +90,7 @@ export function Gallery() {
           viewport={{ once: true, amount: 0.45 }}
           transition={{ duration: 0.72, ease: premiumEase }}
         >
-          <p className="pixel-copy text-xs font-bold lowercase tracking-[0.24em] text-[#00FF41] sm:text-sm sm:tracking-[0.28em]">// media</p>
+          <p className="pixel-copy text-xs font-bold lowercase tracking-[0.24em] text-accent sm:text-sm sm:tracking-[0.28em]">// media</p>
           <h2 className="mt-3 text-balance text-3xl font-black leading-[0.98] tracking-[-0.06em] text-white sm:mt-4 sm:text-5xl lg:text-7xl">Project Updates, Team Posts, and Launch Notes</h2>
           <p className="mt-4 max-w-2xl text-sm leading-6 text-zinc-400 sm:mt-5 sm:text-base sm:leading-7">
             A media feed for product updates, team activity, and behind-the-scenes progress across the portfolio.
@@ -105,11 +103,10 @@ export function Gallery() {
           </div>
         ) : (
           <div className="grid w-full min-w-0 max-w-full gap-4 sm:gap-6 lg:grid-cols-[minmax(0,1.2fr)_380px] lg:items-start">
-            <article className="relative w-[calc(100vw-1.5rem)] min-w-0 max-w-full justify-self-center rounded-[24px] border border-white/10 bg-[#17171c]/92 p-3 shadow-[0_24px_90px_rgba(0,0,0,0.28)] backdrop-blur-2xl sm:w-full sm:rounded-[34px] sm:p-6 lg:order-1">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(0,255,65,0.14),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(0,255,65,0.08),transparent_28%)] opacity-80" />
+            <article className="studio-panel relative w-[calc(100vw-1.5rem)] min-w-0 max-w-full justify-self-center p-3 sm:w-full sm:p-6 lg:order-1">
               <div className="relative min-w-0">
                 <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-                  <span className="rounded-full border border-[#00FF41]/25 bg-[#00FF41]/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-[#00FF41] sm:px-3 sm:text-xs sm:tracking-[0.18em]">
+                  <span className="studio-chip rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.14em] sm:px-3 sm:text-xs sm:tracking-[0.18em]">
                     {safeText(selectedItem.category, 'Update') || 'Update'}
                   </span>
                   <span className="text-[10px] font-medium uppercase tracking-[0.14em] text-zinc-500 sm:text-xs sm:tracking-[0.18em]">{formatDate(safeText(selectedItem.date))}</span>
@@ -129,10 +126,10 @@ export function Gallery() {
                         <img src={activeImage} alt={safeText(selectedItem.title, 'Media post')} className="h-full w-full object-cover" />
                         {selectedImages.length > 1 ? (
                           <>
-                            <button type="button" onClick={showPreviousImage} className="absolute left-2 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full border border-white/10 bg-[#09090B]/70 text-white transition hover:border-[#00FF41]/35 hover:text-[#00FF41] sm:left-3 sm:h-10 sm:w-10" aria-label="Previous image">
+                            <button type="button" onClick={showPreviousImage} className="absolute left-2 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full border border-white/10 bg-[var(--bg-section)] text-white transition hover:border-accent/35 hover:text-accent sm:left-3 sm:h-10 sm:w-10" aria-label="Previous image">
                               <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
                             </button>
-                            <button type="button" onClick={showNextImage} className="absolute right-2 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full border border-white/10 bg-[#09090B]/70 text-white transition hover:border-[#00FF41]/35 hover:text-[#00FF41] sm:right-3 sm:h-10 sm:w-10" aria-label="Next image">
+                            <button type="button" onClick={showNextImage} className="absolute right-2 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full border border-white/10 bg-[var(--bg-section)] text-white transition hover:border-accent/35 hover:text-accent sm:right-3 sm:h-10 sm:w-10" aria-label="Next image">
                               <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
                             </button>
                           </>
@@ -149,7 +146,8 @@ export function Gallery() {
                             key={`${selectedItem.id}-image-${index}`}
                             type="button"
                             onClick={() => setActiveImageIndex(index)}
-                            className={`w-16 shrink-0 overflow-hidden rounded-xl border transition sm:w-auto ${index === activeImageIndex ? 'border-[#00FF41]/50 shadow-[0_0_0_1px_rgba(0,255,65,0.2)]' : 'border-white/10 hover:border-[#00FF41]/30'}`}
+                            className={`w-16 shrink-0 overflow-hidden rounded-xl border transition sm:w-auto ${index === activeImageIndex ? 'border-accent ring-1 ring-accent/35' : 'border-white/10 hover:border-accent/30'}`}
+                            aria-pressed={index === activeImageIndex}
                             aria-label={`Show image ${index + 1}`}
                           >
                             <img src={image} alt={`${safeText(selectedItem.title, 'Media post')} ${index + 1}`} className="h-10 w-full object-cover sm:h-14" />
@@ -168,9 +166,9 @@ export function Gallery() {
               </div>
             </article>
 
-            <aside className="w-[calc(100vw-1.5rem)] min-w-0 max-w-full justify-self-center rounded-[22px] border border-white/10 bg-[#17171c]/78 p-2 shadow-[0_24px_80px_rgba(0,0,0,0.18)] backdrop-blur-xl sm:w-full sm:rounded-[30px] sm:p-3 lg:order-2 lg:sticky lg:top-24 lg:self-start">
+            <aside className="studio-panel w-[calc(100vw-1.5rem)] min-w-0 max-w-full justify-self-center p-2 sm:w-full sm:p-3 lg:order-2 lg:sticky lg:top-24 lg:self-start">
               <div className="mb-2 px-2 pt-2 sm:px-3">
-                <p className="pixel-copy text-xs font-bold uppercase tracking-[0.18em] text-[#00FF41] sm:tracking-[0.22em]">Latest Posts</p>
+                <p className="pixel-copy text-xs font-bold uppercase tracking-[0.18em] text-zinc-300 sm:tracking-[0.22em]">Latest Posts</p>
               </div>
               <div className="space-y-2">
                 {items.map((item) => {
@@ -186,9 +184,10 @@ export function Gallery() {
                       key={item.id}
                       type="button"
                       onClick={() => setSelectedId(item.id)}
-                      className={`flex w-full items-start gap-2.5 rounded-[18px] border p-2.5 text-left transition sm:gap-3 sm:rounded-[24px] sm:p-3 ${active ? 'border-[#00FF41]/35 bg-[#00FF41]/8' : 'border-white/8 bg-white/[0.02] hover:border-[#00FF41]/25 hover:bg-[#00FF41]/6'}`}
+                      className={`flex w-full items-start gap-2.5 rounded-[18px] border p-2.5 text-left transition sm:gap-3 sm:p-3 ${active ? 'border-accent/35 bg-accent/8 ring-1 ring-accent/20' : 'border-white/8 bg-[var(--bg-card)] hover:border-accent/25 hover:bg-[var(--bg-card-hover)]'}`}
+                      aria-pressed={active}
                     >
-                      <div className="grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-2xl border border-white/10 bg-[#101014] text-[#00FF41] sm:h-12 sm:w-12">
+                      <div className="grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-2xl border border-white/10 bg-[var(--bg-elevated)] text-zinc-400 sm:h-12 sm:w-12">
                         {thumbnail ? <img src={thumbnail} alt="" className="h-full w-full object-cover" /> : <Icon className="h-4 w-4 sm:h-5 sm:w-5" />}
                       </div>
                       <div className="min-w-0 flex-1">

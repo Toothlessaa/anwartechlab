@@ -147,6 +147,23 @@ export default function TargetCursor({
     };
     window.addEventListener('scroll', scrollHandler, { passive: true });
 
+    // Clicking a target can unmount it (e.g. the splash "Enter the studio"
+    // button swaps the whole sequence), so mouseleave never fires on the
+    // removed node. Re-validate after paint, mirroring scrollHandler.
+    const clickHandler = () => {
+      if (!activeTarget || !cursorRef.current) return;
+      window.requestAnimationFrame(() => {
+        if (!activeTarget || !cursorRef.current) return;
+        const { x: offsetX, y: offsetY } = getOffset();
+        const mouseX = Number(gsap.getProperty(cursorRef.current, 'x')) + offsetX;
+        const mouseY = Number(gsap.getProperty(cursorRef.current, 'y')) + offsetY;
+        const elementUnderMouse = document.elementFromPoint(mouseX, mouseY);
+        const stillOverTarget = elementUnderMouse && (elementUnderMouse === activeTarget || elementUnderMouse.closest(targetSelector) === activeTarget);
+        if ((!stillOverTarget || !document.contains(activeTarget)) && currentLeaveHandler) currentLeaveHandler();
+      });
+    };
+    window.addEventListener('click', clickHandler);
+
     const mouseDownHandler = () => {
       if (!dotRef.current) return;
       gsap.to(dotRef.current, { scale: 0.7, duration: 0.3 });
@@ -282,6 +299,7 @@ export default function TargetCursor({
       window.removeEventListener('mousemove', moveHandler);
       window.removeEventListener('mouseover', enterHandler);
       window.removeEventListener('scroll', scrollHandler);
+      window.removeEventListener('click', clickHandler);
       window.removeEventListener('resize', resizeHandler);
       window.removeEventListener('mousedown', mouseDownHandler);
       window.removeEventListener('mouseup', mouseUpHandler);

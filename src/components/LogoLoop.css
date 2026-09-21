@@ -102,17 +102,17 @@
   text-decoration: none;
   border-radius: 4px;
   transition: opacity 0.2s ease;
-  color: rgba(255, 255, 255, 0.38);
+  color: var(--text-secondary);
 }
 
 .logoloop__node {
-  color: rgba(255, 255, 255, 0.38);
+  color: var(--text-secondary);
   transition: color 0.2s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .logoloop__link:hover,
 .logoloop__item:hover .logoloop__node {
-  color: #00ff41;
+  color: var(--accent);
   opacity: 1;
 }
 

@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="940" viewBox="0 0 180 940">
+  <defs>
+    <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="white" stop-opacity="0"/>
+      <stop offset=".14" stop-color="white" stop-opacity=".7"/>
+      <stop offset=".32" stop-color="white" stop-opacity=".18"/>
+      <stop offset=".55" stop-color="white"/>
+      <stop offset=".78" stop-color="white" stop-opacity=".3"/>
+      <stop offset="1" stop-color="white" stop-opacity="0"/>
+    </linearGradient>
+    <mask id="column-fade"><rect width="180" height="940" fill="url(#fade)"/></mask>
+  </defs>
+  <g mask="url(#column-fade)" font-family="monospace" font-size="10">
+    <text x="14" y="72" fill="#94a3b8" fill-opacity=".09">
+      <tspan x="14">0</tspan><tspan x="14" dy="20">1</tspan><tspan x="14" dy="20">0</tspan>
+      <tspan x="14" dy="150">1</tspan><tspan x="14" dy="20">0</tspan>
+      <tspan x="14" dy="190">0</tspan>
+      <tspan x="14" dy="180">1</tspan><tspan x="14" dy="20">0</tspan><tspan x="14" dy="20">1</tspan>
+    </text>
+    <text x="42" y="196" fill="#94a3b8" fill-opacity=".045">
+      <tspan x="42">1</tspan><tspan x="42" dy="22">0</tspan>
+      <tspan x="42" dy="250">0</tspan><tspan x="42" dy="22">1</tspan><tspan x="42" dy="22">0</tspan>
+      <tspan x="42" dy="300">1</tspan>
+    </text>
+    <text x="71" y="112" fill="#94a3b8" fill-opacity=".09" opacity=".8">
+      <tspan x="71">0</tspan>
+      <tspan x="71" dy="140">1</tspan><tspan x="71" dy="20">0</tspan><tspan x="71" dy="20">1</tspan>
+      <tspan x="71" dy="190">0</tspan><tspan x="71" dy="20">0</tspan>
+      <tspan x="71" dy="170">1</tspan><tspan x="71" dy="20">0</tspan>
+      <tspan x="71" dy="140">0</tspan>
+    </text>
+    <text x="110" y="262" fill="#94a3b8" fill-opacity=".045">
+      <tspan x="110">1</tspan>
+      <tspan x="110" dy="170">0</tspan><tspan x="110" dy="22">1</tspan>
+      <tspan x="110" dy="230">0</tspan><tspan x="110" dy="22">1</tspan><tspan x="110" dy="22">0</tspan>
+    </text>
+    <text x="158" y="142" fill="#94a3b8" fill-opacity=".09">
+      <tspan x="158">0</tspan><tspan x="158" dy="20">1</tspan>
+      <tspan x="158" dy="240">1</tspan><tspan x="158" dy="20">0</tspan><tspan x="158" dy="20">0</tspan>
+      <tspan x="158" dy="200">0</tspan><tspan x="158" dy="20">1</tspan>
+      <tspan x="158" dy="170">1</tspan>
+    </text>
+    <text x="44" y="604" fill="#35d978" fill-opacity=".035" font-family="monospace" font-size="10">
+      <tspan x="44">0</tspan><tspan x="44" dy="21">1</tspan>
+    </text>
+    <text x="136" y="336" fill="#35d978" fill-opacity=".035" font-family="monospace" font-size="10">
+      <tspan x="136">1</tspan><tspan x="136" dy="21">0</tspan>
+    </text>
+    <g stroke="#94a3b8" stroke-opacity=".08" stroke-width="1">
+      <path d="M28 150v110M148 560v120"/>
+    </g>
+    <g fill="#94a3b8" fill-opacity=".08">
+      <circle cx="56" cy="362" r="1"/><circle cx="124" cy="122" r="1"/>
+    </g>
+  </g>
+</svg>

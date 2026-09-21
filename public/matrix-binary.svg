@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="672" viewBox="0 0 360 672">
+  <g fill="#00ff41" font-family="Courier New, monospace" font-size="13" font-weight="500">
+    <text x="13" y="12" opacity=".24">
+      <tspan x="13">0</tspan><tspan x="13" dy="28">1</tspan><tspan x="13" dy="28">1</tspan><tspan x="13" dy="28">0</tspan><tspan x="13" dy="28">1</tspan><tspan x="13" dy="28">0</tspan>
+      <tspan x="13" dy="56">0</tspan><tspan x="13" dy="28">1</tspan><tspan x="13" dy="28">0</tspan><tspan x="13" dy="28">0</tspan><tspan x="13" dy="28">1</tspan>
+      <tspan x="13" dy="84">1</tspan><tspan x="13" dy="28">0</tspan><tspan x="13" dy="28">1</tspan><tspan x="13" dy="28">0</tspan><tspan x="13" dy="56">0</tspan><tspan x="13" dy="28">1</tspan><tspan x="13" dy="28">0</tspan>
+    </text>
+    <text x="85" y="29" opacity=".15">
+      <tspan x="85">1</tspan><tspan x="85" dy="28">0</tspan><tspan x="85" dy="56">0</tspan><tspan x="85" dy="28">1</tspan><tspan x="85" dy="28">0</tspan>
+      <tspan x="85" dy="84">1</tspan><tspan x="85" dy="28">1</tspan><tspan x="85" dy="28">0</tspan><tspan x="85" dy="28">1</tspan><tspan x="85" dy="28">0</tspan>
+      <tspan x="85" dy="56">0</tspan><tspan x="85" dy="28">1</tspan><tspan x="85" dy="28">1</tspan><tspan x="85" dy="28">0</tspan><tspan x="85" dy="56">1</tspan><tspan x="85" dy="28">0</tspan>
+    </text>
+    <text x="157" y="18" opacity=".2">
+      <tspan x="157">0</tspan><tspan x="157" dy="28">0</tspan><tspan x="157" dy="28">1</tspan><tspan x="157" dy="28">0</tspan><tspan x="157" dy="56">1</tspan>
+      <tspan x="157" dy="28">0</tspan><tspan x="157" dy="28">1</tspan><tspan x="157" dy="28">1</tspan><tspan x="157" dy="56">0</tspan><tspan x="157" dy="28">1</tspan>
+      <tspan x="157" dy="84">0</tspan><tspan x="157" dy="28">1</tspan><tspan x="157" dy="28">0</tspan><tspan x="157" dy="28">0</tspan><tspan x="157" dy="56">1</tspan><tspan x="157" dy="28">1</tspan><tspan x="157" dy="28">0</tspan>
+    </text>
+    <text x="229" y="41" opacity=".13">
+      <tspan x="229">1</tspan><tspan x="229" dy="28">0</tspan><tspan x="229" dy="28">1</tspan><tspan x="229" dy="28">1</tspan><tspan x="229" dy="28">0</tspan>
+      <tspan x="229" dy="84">0</tspan><tspan x="229" dy="28">1</tspan><tspan x="229" dy="28">0</tspan><tspan x="229" dy="28">1</tspan><tspan x="229" dy="28">0</tspan>
+      <tspan x="229" dy="56">1</tspan><tspan x="229" dy="28">0</tspan><tspan x="229" dy="28">0</tspan><tspan x="229" dy="56">1</tspan><tspan x="229" dy="28">0</tspan><tspan x="229" dy="28">1</tspan>
+    </text>
+    <text x="301" y="8" opacity=".23">
+      <tspan x="301">0</tspan><tspan x="301" dy="28">1</tspan><tspan x="301" dy="28">0</tspan><tspan x="301" dy="56">1</tspan><tspan x="301" dy="28">0</tspan>
+      <tspan x="301" dy="56">1</tspan><tspan x="301" dy="28">1</tspan><tspan x="301" dy="28">0</tspan><tspan x="301" dy="28">0</tspan><tspan x="301" dy="28">1</tspan>
+      <tspan x="301" dy="56">0</tspan><tspan x="301" dy="28">1</tspan><tspan x="301" dy="28">0</tspan><tspan x="301" dy="28">1</tspan><tspan x="301" dy="56">0</tspan><tspan x="301" dy="28">1</tspan><tspan x="301" dy="28">0</tspan>
+    </text>
+  </g>
+</svg>

@@ -12,7 +12,7 @@ const TRACK_COPIES = 3;
 const premiumEase = [0.16, 1, 0.3, 1] as const;
 
 function HighlightLink({ href, decorative }: { href: string; decorative: boolean }) {
-  const className = "mt-auto inline-flex w-fit items-center gap-2 rounded-xl bg-[#00FF41] px-4 py-2.5 text-xs font-black text-[#09090B] transition hover:bg-[#66FF66] active:translate-y-px";
+  const className = "studio-primary mt-auto inline-flex w-fit items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-black transition active:translate-y-px";
   const content = <><span>View details</span><ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" /></>;
 
   if (decorative) return <span className={className}>{content}</span>;
@@ -46,7 +46,7 @@ function HighlightCard({ item, priority, decorative }: { item: Highlight; priori
       aria-label={decorative ? undefined : `${item.title}. Press Enter to view more.`}
     >
       <div className="highlight-card__inner">
-        <div className="highlight-card__face bg-[#17171c]">
+        <div className="highlight-card__face">
           {imageUrl ? (
             <img
               src={imageUrl}
@@ -58,26 +58,25 @@ function HighlightCard({ item, priority, decorative }: { item: Highlight; priori
               className="absolute inset-0 h-full w-full select-none object-cover"
             />
           ) : (
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(0,255,65,0.16),transparent_35%),#17171c]" />
+            <div className="absolute inset-0 bg-[var(--bg-card)]" />
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-[#09090B] via-[#09090B]/10 to-[#09090B]/25" />
           <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
-            {item.subtitle ? <p className="pixel-copy text-[10px] font-bold uppercase tracking-[0.2em] text-[#00FF41]">{item.subtitle}</p> : null}
+            {item.subtitle ? <p className="pixel-copy text-[10px] font-bold uppercase tracking-[0.2em] text-accent">{item.subtitle}</p> : null}
             <h3 className="mt-2 text-2xl font-black leading-[1.02] tracking-[-0.045em] text-white">{item.title}</h3>
             <p className="mt-3 text-xs font-medium text-zinc-400">Tap or focus to read more</p>
           </div>
         </div>
 
-        <div className="highlight-card__face highlight-card__back bg-[#111914] p-5 sm:p-6">
-          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00FF41]/70 to-transparent" />
+        <div className="highlight-card__face highlight-card__back p-5 sm:p-6">
           <div className="relative flex h-full flex-col">
-            {item.subtitle ? <p className="pixel-copy text-[10px] font-bold uppercase tracking-[0.2em] text-[#00FF41]">{item.subtitle}</p> : null}
+            {item.subtitle ? <p className="pixel-copy text-[10px] font-bold uppercase tracking-[0.2em] text-accent">{item.subtitle}</p> : null}
             <h3 className="mt-2 text-xl font-black leading-tight tracking-[-0.035em] text-white">{item.title}</h3>
             {item.description ? <p className="mt-3 line-clamp-6 text-sm leading-6 text-zinc-300">{item.description}</p> : null}
             {item.date_text || item.location ? (
               <div className="mt-5 space-y-2 border-t border-white/10 pt-4">
-                {item.date_text ? <p className="flex items-center gap-2 text-xs text-zinc-400"><CalendarDays className="h-4 w-4 text-[#00FF41]" aria-hidden="true" />{item.date_text}</p> : null}
-                {item.location ? <p className="flex items-center gap-2 text-xs text-zinc-400"><MapPin className="h-4 w-4 text-[#00FF41]" aria-hidden="true" />{item.location}</p> : null}
+                {item.date_text ? <p className="flex items-center gap-2 text-xs text-zinc-400"><CalendarDays className="h-4 w-4" aria-hidden="true" />{item.date_text}</p> : null}
+                {item.location ? <p className="flex items-center gap-2 text-xs text-zinc-400"><MapPin className="h-4 w-4" aria-hidden="true" />{item.location}</p> : null}
               </div>
             ) : null}
             {item.href ? <HighlightLink href={item.href} decorative={decorative} /> : null}
@@ -100,8 +99,7 @@ export function Highlights() {
 
   return (
     <section id="highlights" className="binary-surface highlights-carousel relative overflow-hidden bg-[#0d1110] py-20 sm:py-28" aria-labelledby="highlights-title">
-      <BinaryBackground />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_20%,rgba(0,255,65,0.1),transparent_22rem),linear-gradient(180deg,rgba(255,255,255,0.015),transparent)]" />
+      <BinaryBackground section="highlights" />
       <motion.div
         initial={reduce ? false : { opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}

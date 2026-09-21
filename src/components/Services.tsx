@@ -1,6 +1,7 @@
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { SoftwareIllustration, FrontendIllustration, MobileIllustration } from './ServicesIllustrations';
 import './Services.css';
+import { BinaryBackground } from './BinaryBackground';
 
 const expertise = [
   {
@@ -25,7 +26,8 @@ const expertise = [
 
 export function Services() {
   return (
-    <section id="expertise" className="expertise-section" aria-labelledby="expertise-heading">
+    <section id="expertise" className="binary-surface expertise-section" aria-labelledby="expertise-heading">
+      <BinaryBackground section="expertise" />
       <div className="expertise-container">
         <header className="expertise-header">
           <div>

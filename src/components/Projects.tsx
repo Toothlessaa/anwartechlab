@@ -29,9 +29,7 @@ export function Projects() {
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.58, ease: premiumEase }}
     >
-      <BinaryBackground />
-      <div className="pointer-events-none absolute left-[8%] top-20 h-64 w-64 rounded-full bg-[#3B82F6]/10 blur-3xl" />
-      <div className="pointer-events-none absolute right-[10%] bottom-16 h-64 w-64 rounded-full bg-[#7C3AED]/10 blur-3xl" />
+      <BinaryBackground section="projects" />
 
       <div className="relative mx-auto max-w-7xl">
         <div className="mb-10 grid gap-8 lg:grid-cols-[1fr_420px] lg:items-end">
@@ -40,7 +38,7 @@ export function Projects() {
             <p className="mt-5 max-w-xl text-sm leading-7 text-zinc-400 sm:text-base">A compact showcase of premium websites, product interfaces, and launch-ready digital systems built for real clients.</p>
             <div className="mt-6 flex flex-wrap gap-2">
               {filters.map((item) => (
-                <Button key={item} type="button" variant={filter === item ? 'default' : 'secondary'} size="default" onClick={() => setFilter(item)} className={filter === item ? 'bg-[#00FF41] text-[#09090B] shadow-[0_14px_40px_rgba(0,255,65,0.22)] hover:bg-[#66FF66]' : 'border-white/10 bg-white/5 text-zinc-300 hover:border-[#00FF41]/30 hover:bg-[#00FF41]/10 hover:text-[#00FF41]'}>
+                <Button key={item} type="button" variant={filter === item ? 'default' : 'secondary'} size="default" onClick={() => setFilter(item)} aria-pressed={filter === item} className={filter === item ? 'studio-primary underline underline-offset-4' : 'studio-secondary'}>
                   {item}
                 </Button>
               ))}
@@ -74,7 +72,7 @@ function ProjectStat({ value, suffix, label, index }: { value: number; suffix: s
   }, [inView, reduce, spring, value]);
 
   return (
-    <motion.div ref={ref} className="rounded-[20px] border border-white/10 bg-white/5 p-4 shadow-[0_18px_54px_rgba(0,0,0,0.16)] backdrop-blur-md" initial={reduce ? false : { y: 22 }} whileInView={{ y: 0 }} viewport={{ once: true, amount: 0.4 }} transition={{ duration: 0.5, delay: index * 0.06, ease: premiumEase }}>
+    <motion.div ref={ref} className="studio-panel rounded-[20px] p-4" initial={reduce ? false : { y: 22 }} whileInView={{ y: 0 }} viewport={{ once: true, amount: 0.4 }} transition={{ duration: 0.5, delay: index * 0.06, ease: premiumEase }}>
       <motion.p className="text-3xl font-black tracking-[-0.055em] text-white">{display}</motion.p>
       <p className="mt-1 text-[11px] font-bold uppercase tracking-[0.12em] text-zinc-500">{label}</p>
     </motion.div>

@@ -7,27 +7,40 @@
 }
 
 .expertise-section {
-  --expertise-accent: #28e98c;
+  --expertise-accent: var(--accent);
   position: relative;
   padding: 104px clamp(24px, 5.5vw, 96px) 112px;
   scroll-margin-top: 72px;
-  background:
-    radial-gradient(ellipse at 0% 45%, #123c4b1a, transparent 48%),
-    radial-gradient(ellipse at 100% 80%, #1c493c12, transparent 44%),
-    #07111d;
-  color: #f5f7fa;
+  background: var(--bg-expertise);
+  color: var(--text-primary);
   font-family: "Expertise Manrope", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
 .expertise-container { max-width: 1440px; margin-inline: auto; }
 .expertise-header { display: flex; align-items: center; justify-content: space-between; gap: 40px; margin-bottom: 52px; }
-.expertise-eyebrow { margin: 0 0 20px; color: #a8b2c2; font-size: 12px; font-weight: 600; letter-spacing: 0.25em; }
+.expertise-eyebrow { margin: 0 0 20px; color: var(--text-secondary); font-size: 12px; font-weight: 600; letter-spacing: 0.25em; }
 .expertise-eyebrow > span { margin-right: 9px; color: var(--expertise-accent); }
-.expertise-header h2 { margin: 0; color: #f5f7fa; font-size: clamp(52px, 6vw, 88px); font-weight: 800; line-height: 1.04; letter-spacing: -0.045em; }
+.expertise-header h2 { margin: 0; color: var(--text-primary); font-size: clamp(52px, 6vw, 88px); font-weight: 800; line-height: 1.04; letter-spacing: -0.045em; }
 .expertise-header h2 > span { color: var(--expertise-accent); }
-.expertise-subtitle { margin: 23px 0 0; color: #98a2b3; font-size: 16px; line-height: 1.65; letter-spacing: 0.015em; }
-.expertise-note { display: grid; flex-shrink: 0; gap: 9px; border-left: 1px solid #64748b59; padding: 4px 0 4px 21px; color: #8291a6; font-size: 10px; font-weight: 500; letter-spacing: 0.26em; line-height: 1.5; }
+.expertise-subtitle { margin: 23px 0 0; color: var(--text-secondary); font-size: 16px; line-height: 1.65; letter-spacing: 0.015em; }
+.expertise-note {
+  position: relative;
+  display: grid;
+  flex-shrink: 0;
+  gap: 9px;
+  margin-left: 24px;
+  border-left: 1px solid var(--border-accent);
+  padding: 12px 16px 12px 22px;
+  background: var(--bg-expertise);
+  color: var(--text-secondary);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+.expertise-note > span:last-child { color: var(--accent); }
 
 .expertise-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
 .expertise-card {
@@ -36,22 +49,22 @@
   min-width: 0;
   height: 100%;
   padding: 27px 28px 31px;
-  border: 1px solid #28e98c33;
+  border: 1px solid var(--border-default);
   border-radius: 22px;
-  background: #0b1623;
+  background: var(--bg-card);
   color: inherit;
   text-decoration: none;
-  transition: transform 250ms ease, border-color 250ms ease, box-shadow 250ms ease;
+  transition: transform 220ms ease, border-color 220ms ease, background-color 220ms ease;
 }
 .expertise-card-top { display: flex; align-items: center; justify-content: space-between; }
 .expertise-number { color: var(--expertise-accent); font-size: 13px; font-weight: 800; letter-spacing: 0.03em; font-variant-numeric: tabular-nums; }
-.expertise-card-arrow { display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid #8291a64d; border-radius: 50%; color: #b6c0ce; transition: color 250ms ease, border-color 250ms ease, background-color 250ms ease; }
+.expertise-card-arrow { display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid var(--border-default); border-radius: 50%; color: var(--text-secondary); transition: color 250ms ease, border-color 250ms ease, background-color 250ms ease; }
 .expertise-art { display: grid; place-items: center; height: 222px; margin: 8px -10px 22px; }
 .expertise-art > svg { display: block; width: 100%; height: 100%; max-width: 390px; overflow: hidden; }
-.expertise-card h3 { max-width: 300px; margin: 0; color: #f5f7fa; font-size: clamp(26px, 2.05vw, 31px); font-weight: 800; line-height: 1.22; letter-spacing: -0.035em; }
-.expertise-description { margin: 17px 0 23px; color: #a5afbe; font-size: 15px; font-weight: 400; line-height: 1.8; }
+.expertise-card h3 { max-width: 300px; margin: 0; color: var(--text-primary); font-size: clamp(26px, 2.05vw, 31px); font-weight: 800; line-height: 1.22; letter-spacing: -0.035em; }
+.expertise-description { margin: 17px 0 23px; color: var(--text-secondary); font-size: 15px; font-weight: 400; line-height: 1.8; }
 .expertise-technologies { display: flex; flex-wrap: wrap; gap: 7px; margin: auto 0 29px; padding: 0; list-style: none; }
-.expertise-technologies li { padding: 5px 10px; border: 1px solid #95a6bc1a; border-radius: 999px; background: #111e2c; color: #b6bfcc; font-size: 12px; font-weight: 500; line-height: 1.5; white-space: nowrap; }
+.expertise-technologies li { padding: 5px 10px; border: 1px solid var(--border-subtle); border-radius: 999px; background: var(--bg-elevated); color: var(--text-secondary); font-size: 12px; font-weight: 500; line-height: 1.5; white-space: nowrap; }
 .expertise-action { position: relative; display: flex; align-items: center; align-self: flex-start; gap: 10px; min-height: 44px; padding-block: 8px; color: var(--expertise-accent); font-size: 14px; font-weight: 700; }
 .expertise-action::after { position: absolute; bottom: 1px; left: 0; width: 26px; height: 2px; background: var(--expertise-accent); content: ""; }
 .expertise-action > svg { transition: transform 250ms ease; }
@@ -60,8 +73,8 @@
 .expertise-card:focus-visible .expertise-action > svg { transform: translateX(4px); }
 
 @media (hover: hover) {
-  .expertise-card:hover { transform: translateY(-4px); border-color: #28e98c80; box-shadow: 0 8px 24px #28e98c08; }
-  .expertise-card:hover .expertise-card-arrow { border-color: var(--expertise-accent); background: #28e98c08; color: var(--expertise-accent); }
+  .expertise-card:hover { transform: translateY(-3px); border-color: var(--border-accent); background: var(--bg-card-hover); }
+  .expertise-card:hover .expertise-card-arrow { border-color: var(--expertise-accent); background: var(--accent-soft); color: var(--expertise-accent); }
   .expertise-card:hover .expertise-action > svg { transform: translateX(4px); }
 }
 @media (max-width: 1100px) {

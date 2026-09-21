@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { AnimatePresence, motion, useMotionValue, useReducedMotion, useSpring, useTransform } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
 import { BinaryBackground } from './BinaryBackground';
 import { useSound } from './SoundProvider';
 
 const services = ['Web Development', 'Web Development', 'UI/UX Design', 'Artificial Intelligence', 'Cloud Solutions'];
-const floatingTokens = ['<>', '{}', 'const', 'API', 'React', 'TS', 'AI', 'SaaS', 'Cloud'];
+const studioName = 'ANWAR TECH LABS';
 const premiumEase = [0.16, 1, 0.3, 1] as const;
 
 type SplashScreenProps = {
@@ -13,49 +14,45 @@ type SplashScreenProps = {
 
 export function SplashScreen({ onComplete }: SplashScreenProps) {
   const reduce = useReducedMotion();
+  const { startAudio, keypress, whoosh } = useSound();
+  const [entered, setEntered] = useState(false);
   const [progress, setProgress] = useState(0);
   const [typed, setTyped] = useState('');
   const [serviceIndex, setServiceIndex] = useState(0);
   const [deleting, setDeleting] = useState(false);
   const [leaving, setLeaving] = useState(false);
-  const { enabled, tick: playKeySound, whoosh } = useSound();
-  const entrancePlayed = useRef(false);
+  const [nameLength, setNameLength] = useState(0);
+  const enterRef = useRef<HTMLButtonElement>(null);
   const exitPlayed = useRef(false);
 
+  // Keyboard users land directly on the entry control while the splash owns focus.
   useEffect(() => {
-    if (!enabled) return;
+    enterRef.current?.focus();
+  }, []);
+
+  // The tap (or Enter/Space) on this button is the genuine browser gesture that
+  // unlocks audio, so the call below must stay directly inside this handler.
+  const enter = async () => {
+    if (entered) return;
+    setEntered(true);
+    try {
+      await startAudio();
+    } catch {
+      // Audio unavailable: the visual sequence still plays through.
+    }
+    whoosh();
+  };
+
+  useEffect(() => {
     if (leaving && !exitPlayed.current) {
       exitPlayed.current = true;
       whoosh(true);
-    } else if (!leaving && !entrancePlayed.current) {
-      entrancePlayed.current = true;
-      whoosh();
     }
-  }, [enabled, leaving, whoosh]);
+  }, [leaving, whoosh]);
 
-  const pointerX = useMotionValue(0);
-  const pointerY = useMotionValue(0);
-  const smoothX = useSpring(pointerX, { stiffness: 70, damping: 22, mass: 0.25 });
-  const smoothY = useSpring(pointerY, { stiffness: 70, damping: 22, mass: 0.25 });
-  const logoX = useTransform(smoothX, [-1, 1], [-10, 10]);
-  const logoY = useTransform(smoothY, [-1, 1], [-8, 8]);
-  const gridX = useTransform(smoothX, [-1, 1], [-16, 16]);
-  const gridY = useTransform(smoothY, [-1, 1], [-10, 10]);
-
-  const particles = useMemo(
-    () => Array.from({ length: 34 }, (_, index) => ({
-      index,
-      size: 2 + (index % 4),
-      radius: 68 + (index % 5) * 20,
-      angle: (index * 137.5) % 360,
-      duration: 8 + (index % 7),
-      delay: index * 0.035,
-      opacity: 0.22 + (index % 5) * 0.08,
-    })),
-    [],
-  );
-
+  // The progress clock starts only after entry, never silently beforehand.
   useEffect(() => {
+    if (!entered) return;
     if (reduce) {
       setProgress(100);
       const completeTimer = window.setTimeout(onComplete, 900);
@@ -83,10 +80,33 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
       cancelAnimationFrame(frame);
       window.clearTimeout(completeTimer);
     };
-  }, [onComplete, reduce]);
+  }, [entered, onComplete, reduce]);
+
+  // The studio-name reveal shares one clock with its key sounds.
+  useEffect(() => {
+    if (!entered) return;
+    if (reduce) {
+      setNameLength(studioName.length);
+      return;
+    }
+    let interval = 0;
+    let index = 0;
+    const delay = window.setTimeout(() => {
+      interval = window.setInterval(() => {
+        index += 1;
+        setNameLength(index);
+        if (studioName[index - 1] !== ' ') keypress();
+        if (index >= studioName.length) window.clearInterval(interval);
+      }, 80);
+    }, 1400);
+    return () => {
+      window.clearTimeout(delay);
+      window.clearInterval(interval);
+    };
+  }, [entered, reduce, keypress]);
 
   useEffect(() => {
-    if (reduce) return;
+    if (!entered || reduce) return;
     const current = services[serviceIndex];
     const doneTyping = !deleting && typed === current;
     const doneDeleting = deleting && typed === '';
@@ -103,132 +123,94 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
         return;
       }
       setTyped((value) => deleting ? current.slice(0, Math.max(0, value.length - 1)) : current.slice(0, value.length + 1));
+      if (!deleting && nameLength === studioName.length && current[typed.length] !== ' ') keypress();
     }, delay);
 
     return () => window.clearTimeout(timer);
-  }, [deleting, reduce, serviceIndex, typed]);
+  }, [entered, deleting, reduce, serviceIndex, typed, keypress, nameLength]);
 
   return (
     <AnimatePresence>
       <motion.div
         data-splash
-        className="binary-surface fixed inset-0 z-[999] grid min-h-[100dvh] overflow-hidden bg-[#09090B] text-[#F8FAFC]"
-        initial={{ opacity: 1, clipPath: 'circle(140% at 50% 50%)' }}
-        animate={leaving ? { opacity: 0, clipPath: 'circle(0% at 50% 50%)' } : { opacity: 1, clipPath: 'circle(140% at 50% 50%)' }}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Welcome to Anwar Tech Labs"
+        className="splash-screen binary-surface fixed inset-0 z-[999] grid min-h-[100dvh] overflow-hidden"
+        initial={reduce ? false : { opacity: 1, clipPath: 'circle(140% at 50% 50%)' }}
+        animate={reduce ? { opacity: leaving ? 0 : 1 } : leaving ? { opacity: 0, clipPath: 'circle(0% at 50% 50%)' } : { opacity: 1, clipPath: 'circle(140% at 50% 50%)' }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.72, ease: premiumEase }}
-        onPointerMove={(event) => {
-          if (reduce || event.pointerType !== 'mouse') return;
-          pointerX.set((event.clientX / window.innerWidth - 0.5) * 2);
-          pointerY.set((event.clientY / window.innerHeight - 0.5) * 2);
-        }}
       >
         <BinaryBackground />
-        <motion.div
-          className="absolute inset-0 opacity-55"
-          style={{ x: reduce ? 0 : gridX, y: reduce ? 0 : gridY }}
-          animate={reduce ? undefined : { scale: [1, 1.05] }}
-          transition={{ duration: 5.8, ease: 'easeOut' }}
-        >
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(0,255,65,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,65,0.08)_1px,transparent_1px)] bg-[size:56px_56px] [mask-image:radial-gradient(circle_at_center,black,transparent_72%)]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_44%,rgba(0,255,65,0.18),transparent_18rem),radial-gradient(circle_at_58%_52%,rgba(124,255,124,0.14),transparent_20rem),radial-gradient(circle_at_43%_56%,rgba(53,255,107,0.11),transparent_16rem)]" />
-        </motion.div>
-
-        <div className="pointer-events-none absolute inset-0">
-          {floatingTokens.map((token, index) => (
-            <motion.span
-              key={token}
-              className="pixel-copy absolute text-sm font-bold text-white/5 blur-[0.4px] sm:text-lg"
-              style={{ left: `${8 + ((index * 11) % 82)}%`, top: `${12 + ((index * 17) % 72)}%` }}
-              animate={reduce ? undefined : { y: [-10, 14, -10], x: [-6, 8, -6], opacity: [0.03, 0.075, 0.03] }}
-              transition={{ duration: 9 + index, repeat: Infinity, ease: 'easeInOut', delay: index * 0.28 }}
-            >
-              {token}
-            </motion.span>
-          ))}
-        </div>
-
-        <div className="pointer-events-none absolute inset-0">
-          {particles.map((particle) => (
-            <motion.span
-              key={particle.index}
-               className="absolute left-1/2 top-1/2 rounded-full bg-[#00FF41] shadow-[0_0_16px_rgba(0,255,65,0.85)]"
-              style={{ width: particle.size, height: particle.size, opacity: particle.opacity }}
-              initial={{ x: 0, y: 0, scale: 0 }}
-              animate={reduce ? { scale: 1 } : {
-                x: [0, Math.cos((particle.angle * Math.PI) / 180) * particle.radius, Math.cos(((particle.angle + 80) * Math.PI) / 180) * (particle.radius + 18), 0],
-                y: [0, Math.sin((particle.angle * Math.PI) / 180) * particle.radius, Math.sin(((particle.angle + 80) * Math.PI) / 180) * (particle.radius + 18), 0],
-                scale: [0, 1, 0.82, 0],
-              }}
-              transition={{ duration: particle.duration, repeat: Infinity, ease: 'easeInOut', delay: particle.delay }}
-            />
-          ))}
-        </div>
 
         <div className="relative z-10 flex min-h-[100dvh] flex-col items-center justify-center px-5 py-12">
-          <motion.div
-            className="relative flex flex-col items-center"
-            style={{ x: reduce ? 0 : logoX, y: reduce ? 0 : logoY }}
-            animate={reduce ? undefined : { translateY: [0, -6, 0] }}
-            transition={{ duration: 4.4, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <motion.div
-               className="absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#00FF41] shadow-[0_0_45px_rgba(0,255,65,0.95)]"
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: [0, 1.2, 0.55], opacity: [0, 1, 0] }}
-              transition={{ duration: 1.1, ease: premiumEase }}
-            />
+          {!entered ? (
+            <div className="flex flex-col items-center text-center">
+              <svg width="120" height="120" viewBox="0 0 172 172" className="text-accent sm:h-36 sm:w-36" aria-hidden="true" focusable="false">
+                <path d="M86 12 L148 48 L148 124 L86 160 L24 124 L24 48 Z" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M52 118 L86 42 L120 118" fill="none" stroke="currentColor" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M66 94 H106" fill="none" stroke="currentColor" strokeWidth="6" strokeLinecap="round" />
+              </svg>
 
-            <motion.svg width="172" height="172" viewBox="0 0 172 172" className="drop-shadow-[0_0_36px_rgba(0,255,65,0.35)] sm:h-56 sm:w-56">
-              <defs>
-                <linearGradient id="atl-logo" x1="20" x2="152" y1="20" y2="152">
-                  <stop offset="0%" stopColor="#00FF41" />
-                  <stop offset="46%" stopColor="#35FF6B" />
-                  <stop offset="100%" stopColor="#7CFF7C" />
-                </linearGradient>
-                <filter id="atl-glow" x="-50%" y="-50%" width="200%" height="200%">
-                  <feGaussianBlur stdDeviation="4" result="blur" />
-                  <feMerge>
-                    <feMergeNode in="blur" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-              </defs>
-              <motion.path d="M86 12 L148 48 L148 124 L86 160 L24 124 L24 48 Z" fill="none" stroke="url(#atl-logo)" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" filter="url(#atl-glow)" initial={reduce ? false : { pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.24, delay: 1.12, ease: premiumEase }} />
-              <motion.path d="M52 118 L86 42 L120 118" fill="none" stroke="url(#atl-logo)" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" filter="url(#atl-glow)" initial={reduce ? false : { pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.08, delay: 1.38, ease: premiumEase }} />
-              <motion.path d="M66 94 H106" fill="none" stroke="#00FF41" strokeWidth="6" strokeLinecap="round" initial={reduce ? false : { pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: 1 }} transition={{ duration: 0.62, delay: 2.0, ease: premiumEase }} />
-              <motion.circle cx="86" cy="86" r="68" fill="url(#atl-logo)" opacity="0.08" initial={{ opacity: 0 }} animate={{ opacity: [0.05, 0.14, 0.07] }} transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut', delay: 2.2 }} />
-            </motion.svg>
+              <p className="mt-7 text-center text-xl font-black tracking-[0.24em] text-white sm:text-2xl">{studioName}</p>
 
-            <motion.div className="mt-7 flex flex-wrap justify-center gap-[0.34em] text-center text-2xl font-black tracking-[0.24em] text-white sm:text-4xl" initial="hidden" animate="show" variants={{ hidden: {}, show: { transition: { delayChildren: 2.35, staggerChildren: 0.045 } } }}>
-              {'ANWAR TECH LABS'.split('').map((char, index) => (
-                <motion.span key={`${char}-${index}`} className={char === ' ' ? 'w-3 sm:w-5' : ''} variants={{ hidden: { opacity: 0, y: 18, filter: 'blur(8px)' }, show: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.55, ease: premiumEase } } }} onAnimationStart={char !== ' ' ? playKeySound : undefined}>
-                  {char}
-                </motion.span>
-              ))}
-            </motion.div>
+              <p className="mt-4 max-w-xl text-center text-sm font-semibold tracking-wide text-white/70 sm:text-base">
+                Engineering Ideas Into Reality
+              </p>
 
-            <motion.p className="mt-5 max-w-xl text-center text-sm font-semibold tracking-wide text-white/70 sm:text-base" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.72, delay: 3.05, ease: premiumEase }}>
-              Engineering Ideas Into Reality
-            </motion.p>
-
-            <motion.div className="pixel-copy mt-5 h-7 text-center text-sm font-bold text-[#00FF41] sm:text-base" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 3.34, duration: 0.5 }}>
-              {typed || services[0].slice(0, reduce ? services[0].length : 0)}
-              <motion.span animate={{ opacity: [0, 1, 0] }} transition={{ duration: 0.86, repeat: Infinity, ease: 'easeInOut' }} className="ml-1 text-white">|</motion.span>
-            </motion.div>
-          </motion.div>
-
-          <motion.div className="glass absolute bottom-8 left-1/2 w-[min(92vw,520px)] -translate-x-1/2 rounded-full px-5 py-4" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.66, delay: 3.75, ease: premiumEase }}>
-            <div className="mb-3 flex items-center justify-between text-xs font-bold text-white/78 sm:text-sm">
-              <span>Launching Experience...</span>
-              <span>{progress}%</span>
+              <button
+                ref={enterRef}
+                type="button"
+                autoFocus
+                onClick={() => void enter()}
+                className="mt-9 inline-flex min-h-[52px] items-center gap-3 rounded-full border border-accent/60 px-8 text-sm font-bold tracking-wide text-white transition hover:bg-accent hover:text-[var(--accent-ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-main)] active:translate-y-px"
+              >
+                Enter the studio
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </button>
+              <p className="mt-4 text-xs font-medium tracking-wide text-zinc-500">
+                Sound accompanies this experience.
+              </p>
             </div>
-            <div className="h-2 overflow-hidden rounded-full bg-white/10">
-              <motion.div className="relative h-full rounded-full bg-gradient-to-r from-[#00FF41] via-[#35FF6B] to-[#7CFF7C] shadow-[0_0_22px_rgba(0,255,65,0.65)]" style={{ width: `${progress}%` }}>
-                <motion.span className="absolute inset-y-0 right-0 w-16 bg-gradient-to-r from-transparent via-white/80 to-transparent blur-[1px]" animate={reduce ? undefined : { x: [-90, 22] }} transition={{ duration: 1.1, repeat: Infinity, ease: 'easeInOut' }} />
+          ) : (
+            <motion.div className="relative flex flex-col items-center">
+              <motion.svg width="172" height="172" viewBox="0 0 172 172" className="text-accent sm:h-56 sm:w-56">
+                <motion.path d="M86 12 L148 48 L148 124 L86 160 L24 124 L24 48 Z" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" initial={reduce ? false : { pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.1, delay: 0.1, ease: premiumEase }} />
+                <motion.path d="M52 118 L86 42 L120 118" fill="none" stroke="currentColor" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" initial={reduce ? false : { pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.0, delay: 0.3, ease: premiumEase }} />
+                <motion.path d="M66 94 H106" fill="none" stroke="currentColor" strokeWidth="6" strokeLinecap="round" initial={reduce ? false : { pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: 1 }} transition={{ duration: 0.5, delay: 0.85, ease: premiumEase }} />
+              </motion.svg>
+
+              <div aria-label={studioName} className="mt-7 flex flex-wrap justify-center gap-[0.34em] text-center text-2xl font-black tracking-[0.24em] text-white sm:text-4xl">
+                {studioName.split('').map((char, index) => (
+                  <span aria-hidden="true" key={`${char}-${index}`} className={char === ' ' ? 'w-3 sm:w-5' : ''} style={{ visibility: index < nameLength ? 'visible' : 'hidden' }}>
+                    {char}
+                  </span>
+                ))}
+              </div>
+
+              <motion.p className="mt-5 max-w-xl text-center text-sm font-semibold tracking-wide text-white/70 sm:text-base" initial={reduce ? false : { opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.9, ease: premiumEase }}>
+                Engineering Ideas Into Reality
+              </motion.p>
+
+              <motion.div className="pixel-copy mt-5 h-7 text-center text-sm font-bold text-zinc-400 sm:text-base" initial={reduce ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.2, duration: 0.5 }}>
+                {typed || services[0].slice(0, reduce ? services[0].length : 0)}
+                <motion.span animate={reduce ? undefined : { opacity: [0, 1, 0] }} transition={{ duration: 0.86, repeat: Infinity, ease: 'easeInOut' }} className="ml-1 text-white">|</motion.span>
               </motion.div>
-            </div>
-          </motion.div>
+            </motion.div>
+          )}
+
+          {entered ? (
+            <motion.div className="glass absolute bottom-8 left-1/2 w-[min(92vw,520px)] -translate-x-1/2 rounded-full px-5 py-4" initial={reduce ? false : { opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 2.5, ease: premiumEase }}>
+              <div className="mb-3 flex items-center justify-between text-xs font-bold text-white/78 sm:text-sm">
+                <span>Launching Experience...</span>
+                <span>{progress}%</span>
+              </div>
+              <div className="h-2 overflow-hidden rounded-full bg-white/10">
+                <div className="splash-progress relative h-full rounded-full" style={{ width: `${progress}%` }} />
+              </div>
+            </motion.div>
+          ) : null}
         </div>
       </motion.div>
     </AnimatePresence>
